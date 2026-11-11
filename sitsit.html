@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Housebets Sportsbook — Phone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #061525; --bg-elevated: #0a1f35; --bg-card: #0d2438; --bg-soft: #122c44;
+      --ink: #e8f1f8; --quiet: #7a9bb5; --line: #1a3a55; --accent: #00d4ff;
+      --accent-dim: rgba(0,212,255,.16); --danger: #ff6b6b; --success: #3dd68c; --warn: #f5a524;
+      --shadow: 0 8px 32px rgba(0,20,40,.55); --topbar-bg: rgba(6,21,37,.96);
+      --input-bg: #0d2438; --odd-bg: #0d2438;
+      --hero-overlay: linear-gradient(105deg, rgba(4,16,30,.97) 0%, rgba(4,16,30,.55) 55%, rgba(4,16,30,.25) 100%);
+      --scoreboard-bg: #0a1a2e; --feedback-bg: rgba(0,212,255,.12); --feedback-color: #00d4ff;
+      --empty-bg: #0a1f35; --suspended: #2a4058; --frame-phone: 390px; --hero-height: 118px;
+      --bottom-nav-h: 60px; --search-overlay-bg: linear-gradient(165deg, #041018 0%, #0a1f35 40%, #0d2a48 100%);
+    }
+    [data-theme="light"] {
+      --bg: #e8f4fc; --bg-elevated: #f0f8ff; --bg-card: #ffffff; --bg-soft: #d6ebf8;
+      --ink: #0c1e2e; --quiet: #4a6b82; --line: #b8d4e8; --accent: #0088bb;
+      --accent-dim: rgba(0,136,187,.12); --danger: #e03a3a; --success: #1a9f5c; --warn: #c47d0e;
+      --shadow: 0 8px 28px rgba(30,80,120,.12); --topbar-bg: rgba(240,248,255,.97);
+      --input-bg: #eef6fc; --odd-bg: #eef6fc;
+      --hero-overlay: linear-gradient(105deg, rgba(12,30,46,.92) 0%, rgba(12,30,46,.5) 55%, rgba(12,30,46,.2) 100%);
+      --scoreboard-bg: #1a2d42; --feedback-bg: #d6ebf8; --feedback-color: #007aa3;
+      --empty-bg: #f5fafd; --suspended: #c5d9e8;
+      --search-overlay-bg: linear-gradient(165deg, #dceef9 0%, #e8f4fc 45%, #f5fafd 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #030a12; color: var(--ink); font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 13px; letter-spacing: -0.01em; min-height: 100%; -webkit-tap-highlight-color: transparent;
+    }
+    [data-theme="light"] html, [data-theme="light"] body { background: #c8e0f0; }
+    body { overflow-x: hidden; display: flex; justify-content: center; min-height: 100dvh; overflow-y: hidden; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; border: 0; background: none; color: inherit; }
+    button:active { transform: scale(.98); }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    a { color: inherit; text-decoration: none; }
+    h1, h2, h3 { font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: -0.03em; }
+
+    .frame {
+      width: 100%; max-width: var(--frame-phone); margin: 0 auto; background: var(--bg);
+      min-height: 100dvh; height: 100dvh; position: relative;
+      box-shadow: 0 0 0 1px var(--line), 0 24px 80px rgba(0,0,0,.5);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .topbar {
+      height: 56px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+      border-bottom: 1px solid var(--line); background: var(--topbar-bg); backdrop-filter: blur(14px); position: relative; z-index: 50;
+    }
+    .brand { display: flex; align-items: center; gap: 7px; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .brand .brand-mark {
+      width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #0099cc 60%, #006688);
+      display: grid; place-items: center; box-shadow: 0 0 16px rgba(0,212,255,.35); flex-shrink: 0;
+    }
+    .brand .brand-mark svg { width: 16px; height: 16px; color: #041018; }
+    [data-theme="light"] .brand .brand-mark svg { color: #fff; }
+    .brand .brand-word { display: flex; align-items: baseline; }
+    .brand .brand-word .hb-house {
+      background: linear-gradient(105deg, var(--ink) 0%, var(--accent) 120%);
+      -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800;
+    }
+    .brand .brand-word .hb-bets { color: var(--accent); font-weight: 700; }
+    .brand .brand-word .hb-dot { color: var(--accent); font-size: 20px; line-height: 0; margin-left: 1px; }
+    .top-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .balance { font-weight: 700; white-space: nowrap; font-size: 11px; text-align: right; }
+    .balance small { display: block; font-size: 7px; color: var(--quiet); margin-top: 1px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .avatar { width: 32px; height: 32px; display: grid; place-items: center; background: var(--accent); color: #041018; border-radius: 50%; font-weight: 800; font-size: 12px; font-family: 'Syne', sans-serif; }
+    [data-theme="light"] .avatar { color: #fff; }
+    .icon-btn, .wallet-icon-btn { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-elevated); }
+    .wallet-icon-btn { color: var(--accent); }
+    .wallet-icon-btn svg { width: 18px; height: 18px; }
+
+    .wallet-float-overlay { position: fixed; inset: 0; z-index: 90; display: none; align-items: flex-start; justify-content: center; padding-top: 60px; background: rgba(0,0,0,.45); }
+    .wallet-float-overlay.open { display: flex; }
+    .wallet-float { width: calc(100% - 24px); max-width: calc(var(--frame-phone) - 24px); background: var(--bg-elevated); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; max-height: min(72dvh, 520px); display: flex; flex-direction: column; }
+    .wallet-float-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 14px 10px; border-bottom: 1px solid var(--line); }
+    .wallet-float-head h3 { font: 700 15px 'Syne', sans-serif; }
+    .wallet-float-head .sub { font-size: 10px; color: var(--quiet); font-weight: 600; margin-top: 2px; }
+    .wallet-float-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 16px; color: var(--quiet); }
+    .wallet-float-active { margin: 12px 14px; padding: 12px 14px; border-radius: 12px; background: var(--accent-dim); border: 1px solid rgba(0,212,255,.25); display: flex; align-items: center; gap: 10px; }
+    .wallet-float-active .wa-info small { display: block; font-size: 9px; color: var(--quiet); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .wallet-float-active .wa-info b { font-size: 16px; font-weight: 700; }
+    .wallet-float-body { overflow-y: auto; padding: 0 10px 14px; flex: 1; }
+    .wallet-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .wallet-col { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-card); overflow: hidden; }
+    .wallet-col-title { padding: 8px 10px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet); border-bottom: 1px solid var(--line); background: var(--bg-soft); text-align: center; }
+    .wallet-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 8px; border-top: 1px solid var(--line); text-align: left; }
+    .wallet-item:first-of-type { border-top: 0; }
+    .wallet-item.active { background: var(--accent-dim); }
+    .wallet-item .w-logo { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: var(--bg-soft); border: 1px solid var(--line); }
+    .wallet-item .w-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .wallet-item .w-logo .fallback { font-size: 10px; font-weight: 800; color: var(--accent); }
+    .wallet-item .w-info { flex: 1; min-width: 0; }
+    .wallet-item .w-info b { display: block; font-size: 12px; font-weight: 700; }
+    .wallet-item .w-info small { font-size: 9px; color: var(--quiet); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wallet-item .w-amount { font-size: 10px; font-weight: 700; text-align: right; max-width: 72px; word-break: break-all; }
+    .wallet-item .w-check { color: var(--accent); font-size: 12px; font-weight: 800; width: 14px; text-align: center; }
+
+    .main-content { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+    /* PAGE TABS — artistic + HOME fixed */
+    .page-tabs-wrap {
+      display: flex; align-items: stretch; flex-shrink: 0; background: var(--bg);
+      border-bottom: 1px solid var(--line); position: relative; z-index: 40;
+    }
+    .page-tabs-wrap.hidden { display: none !important; }
+    .page-tab-home {
+      flex-shrink: 0; padding: 0 10px; min-height: 42px; display: grid; place-items: center;
+      border-right: 1px solid var(--line); background: linear-gradient(180deg, rgba(0,212,255,.07), transparent);
+    }
+    .page-tab-home button {
+      font-family: 'Outfit', 'Syne', sans-serif; font-size: 11px; font-weight: 800;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--quiet); padding: 10px 2px 9px; position: relative;
+    }
+    .page-tab-home button.active { color: var(--accent); text-shadow: 0 0 14px rgba(0,212,255,.45); }
+    .page-tab-home button.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2.5px; border-radius: 2px 2px 0 0;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent); box-shadow: 0 0 10px rgba(0,212,255,.55);
+    }
+    .page-tabs { display: flex; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .page-tabs::-webkit-scrollbar { display: none; }
+    .page-tabs button {
+      flex-shrink: 0; white-space: nowrap; padding: 11px 9px 10px;
+      font-family: 'Outfit', 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.11em; text-transform: uppercase; color: var(--quiet);
+      border-right: 1px solid var(--line); position: relative;
+    }
+    .page-tabs button:last-child { border-right: 0; }
+    .page-tabs button.active { color: var(--accent); text-shadow: 0 0 12px rgba(0,212,255,.4); }
+    .page-tabs button.active::after {
+      content: ''; position: absolute; left: 6px; right: 6px; bottom: 0; height: 2.5px; border-radius: 2px 2px 0 0;
+      background: linear-gradient(90deg, var(--accent), #7af0ff); box-shadow: 0 0 8px rgba(0,212,255,.5);
+    }
+
+    .view { display: none; flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 12px 12px calc(var(--bottom-nav-h) + 90px); }
+    .view.active { display: block; }
+    #view-slip.active { display: flex; flex-direction: column; padding: 0 0 calc(var(--bottom-nav-h) + 8px); overscroll-behavior: none; }
+    #view-home { padding-top: 0; }
+    .home-sticky { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 12px 12px 8px; margin: 0 -12px; border-bottom: 1px solid var(--line); box-shadow: 0 4px 16px rgba(0,0,0,.18); }
+    .home-sticky .search-trigger { margin-bottom: 10px; }
+    .home-scroll-body { padding-top: 4px; }
+
+    .section-title { display: flex; align-items: center; margin: 14px 0 10px; gap: 10px; }
+    .section-title h2 { font-size: 14px; font-weight: 700; display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0; }
+    .section-title h2 span { font-size: 9px; color: var(--quiet); background: var(--bg-soft); padding: 3px 7px; border-radius: 4px; font-weight: 600; font-family: 'DM Sans', sans-serif; letter-spacing: 0; }
+    .section-title .see-all { flex-shrink: 0; font-size: 11px; font-weight: 700; color: var(--accent); margin-left: auto; }
+
+    .live-label { display: flex; gap: 6px; align-items: center; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .hero-teams { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 4px; }
+    .hero-team { display: flex; align-items: center; gap: 5px; min-width: 0; }
+    .hero-team b { font-size: 12px; color: #fff; font-family: 'Syne', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hero-score-wrap { text-align: center; min-width: 56px; }
+    .hero-clock { font-size: 9px; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
+    .hero-score { font: 700 18px 'Syne', sans-serif; color: #fff; }
+
+    .inf-wrap { overflow-x: auto; margin-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .inf-wrap::-webkit-scrollbar { display: none; }
+    .inf-track { display: flex; gap: 14px; width: max-content; padding: 4px 2px 6px; }
+    .inf-group { display: flex; gap: 14px; }
+    .comp-circle-btn { flex-shrink: 0; width: 72px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--ink); }
+    .comp-circle { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--line); background: #fff; display: grid; place-items: center; overflow: hidden; padding: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.22); }
+    .comp-circle img { width: 100%; height: 100%; object-fit: contain; }
+    .comp-circle .sport-art { width: 100%; height: 100%; display: grid; place-items: center; font-size: 20px; border-radius: 50%; background: #f3f4f6; color: #333; }
+    .comp-circle-name { font-size: 9px; font-weight: 600; color: var(--quiet); text-align: center; max-width: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .hl-wrap { overflow-x: auto; margin-bottom: 12px; border-radius: 12px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .hl-wrap::-webkit-scrollbar { display: none; }
+    .hl-track { display: flex; gap: 10px; width: max-content; padding: 2px 2px 4px; }
+    .hl-group { display: flex; gap: 10px; }
+    .live-banner-home {
+      flex: 0 0 min(320px, 82vw); min-height: var(--hero-height); border-radius: 14px; border: 1px solid var(--line);
+      position: relative; overflow: hidden; cursor: pointer; background: #0a1520; text-align: left; color: #fff; display: flex; flex-direction: column;
+    }
+    .live-banner-home .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.25) brightness(.42); opacity: .42; }
+    .live-banner-home::after { content: ''; position: absolute; inset: 0; background: var(--hero-overlay); pointer-events: none; }
+    .live-banner-home .hero-content { position: relative; z-index: 1; padding: 8px 12px; color: #fff; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .live-banner-home .banner-league { position: relative; z-index: 1; font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #9ec9e8; padding: 8px 12px 0; }
+    .live-banner-home .banner-odds { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; padding: 0 10px 10px; }
+    .live-banner-home .banner-odd {
+      background: rgba(8,24,40,.78); border: 1px solid rgba(0,212,255,.22); border-radius: 8px; min-height: 36px;
+      display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; color: #fff; font-weight: 700;
+    }
+    .live-banner-home .banner-odd small { font-size: 9px; color: #9ab; font-weight: 700; }
+    .live-banner-home .banner-odd b { font-size: 12px; font-family: 'Syne', sans-serif; }
+    .live-banner-home .banner-odd.picked { background: var(--accent); border-color: var(--accent); color: #041018; }
+    .live-banner-home .banner-odd.picked small { color: inherit; opacity: .85; }
+    .stack-banners { display: flex; flex-direction: column; gap: 10px; }
+    .stack-banners .live-banner-home { flex: none; width: 100%; min-height: 0; }
+
+    .search-trigger {
+      height: 42px; display: flex; align-items: center; gap: 10px; background: var(--bg-card); border: 1px solid var(--line);
+      border-radius: 12px; padding: 0 14px; color: var(--quiet); width: 100%; text-align: left; font-size: 13px; font-weight: 500;
+    }
+    .search-trigger:active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+    .search-overlay {
+      position: fixed; inset: 0; z-index: 100; display: none; flex-direction: column;
+      background: var(--search-overlay-bg); max-width: var(--frame-phone); margin: 0 auto; left: 0; right: 0;
+    }
+    .search-overlay.open { display: flex; }
+    .search-overlay-head { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--topbar-bg); }
+    .search-back-btn { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-elevated); display: grid; place-items: center; }
+    .search-input-wrap {
+      flex: 1; height: 42px; display: flex; align-items: center; gap: 10px; background: var(--bg-card);
+      border: 1.5px solid var(--accent); border-radius: 12px; padding: 0 12px; box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .search-input-wrap input { border: 0; outline: 0; flex: 1; background: transparent; font-size: 14px; color: var(--ink); min-width: 0; }
+    .search-clear-btn { width: 28px; height: 28px; border-radius: 50%; background: var(--bg-soft); color: var(--quiet); display: none; place-items: center; font-size: 14px; font-weight: 700; }
+    .search-clear-btn.visible { display: grid; }
+    .search-overlay-body { flex: 1; overflow-y: auto; padding: 16px 14px calc(var(--bottom-nav-h) + 24px); }
+    .search-section { margin-bottom: 22px; }
+    .search-section-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .search-section-title::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+    .search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .search-chip { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-card); font-size: 12px; font-weight: 600; }
+    .search-chip.hot { border-color: rgba(0,212,255,.35); background: var(--accent-dim); color: var(--accent); }
+    .search-result-list { display: flex; flex-direction: column; gap: 6px; }
+    .search-result-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-card); text-align: left; }
+    .search-result-item .sr-info { flex: 1; min-width: 0; }
+    .search-result-item .sr-info b { display: block; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .search-result-item .sr-info small { display: block; font-size: 10px; color: var(--quiet); margin-top: 3px; }
+    .search-result-item .sr-meta { flex-shrink: 0; text-align: right; font-size: 10px; font-weight: 700; color: var(--quiet); }
+    .search-result-item .sr-meta .live-tag { color: var(--accent); }
+    .search-empty { text-align: center; padding: 40px 20px; color: var(--quiet); }
+    .search-empty h3 { font-size: 15px; margin-bottom: 6px; color: var(--ink); }
+
+    .sport-nav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .sport-nav::-webkit-scrollbar { display: none; }
+    .sport-nav button { white-space: nowrap; padding: 9px 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--bg-card); font-size: 11px; font-weight: 600; color: var(--quiet); flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; }
+    .sport-nav button.selected { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+    .sp-ico-wrap { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(145deg, rgba(0,212,255,.18), rgba(0,100,160,.08)); border: 1px solid rgba(0,212,255,.22); font-size: 12px; }
+    .sp-ico-wrap.lg { width: 28px; height: 28px; border-radius: 9px; font-size: 15px; }
+    .flag-ico { width: 18px; height: 13px; border-radius: 2px; object-fit: cover; box-shadow: 0 0 0 1px rgba(255,255,255,.12); }
+
+    .expand-more-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px; margin-top: 6px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-card); color: var(--quiet); font-size: 12px; font-weight: 600; }
+    .expand-more-btn svg { width: 16px; height: 16px; transition: transform .2s; }
+    .expand-more-btn.open svg { transform: rotate(180deg); }
+
+    #view-live, #view-upcoming, #view-football { padding-top: 0; }
+    .live-sticky, .upcoming-sticky { position: sticky; top: 0; z-index: 30; background: var(--bg); padding: 10px 0 4px; margin: 0 -12px; border-bottom: 1px solid var(--line); box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+    .live-sport-scroll, .upcoming-sport-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 0 12px 10px; scrollbar-width: none; }
+    .live-sport-scroll::-webkit-scrollbar, .upcoming-sport-scroll::-webkit-scrollbar { display: none; }
+    .live-sport-pill, .upcoming-sport-pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--bg-soft); font-size: 13px; font-weight: 600; color: var(--quiet); }
+    .live-sport-pill.selected, .upcoming-sport-pill.selected { border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; color: var(--ink); background: var(--bg-elevated); }
+    .upcoming-date-row { display: flex; align-items: stretch; padding: 0 4px 2px 8px; }
+    .upcoming-dates { display: flex; gap: 2px; overflow-x: auto; flex: 1; min-width: 0; scrollbar-width: none; padding: 0 4px 6px; }
+    .upcoming-dates::-webkit-scrollbar { display: none; }
+    .upcoming-date-item { flex-shrink: 0; min-width: 48px; padding: 6px; text-align: center; border-radius: 8px; color: var(--quiet); }
+    .upcoming-date-item .d-day { display: block; font-size: 11px; font-weight: 700; }
+    .upcoming-date-item .d-date { display: block; font-size: 10px; margin-top: 3px; font-weight: 600; }
+    .upcoming-date-item.selected { color: var(--ink); }
+    .upcoming-date-item.is-today .d-day { color: var(--accent); font-weight: 800; }
+    .cal-icon-btn { flex-shrink: 0; width: 48px; min-height: 44px; display: grid; place-items: center; border-left: 1px solid var(--line); }
+
+    .sports-sticky { position: sticky; top: 0; z-index: 45; background: var(--bg); margin: 0 -12px; padding: 10px 12px 0; border-bottom: 1px solid var(--line); box-shadow: 0 4px 16px rgba(0,0,0,.18); }
+    .sports-cat-row { display: flex; gap: 6px; padding-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
+    .sports-dd-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-card); font-size: 12px; font-weight: 700; color: var(--quiet); white-space: nowrap; }
+    .sports-dd-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+    .sports-sub-tabs { display: flex; gap: 4px; padding: 6px 0 10px; overflow-x: auto; scrollbar-width: none; align-items: center; }
+    .sports-sub-tabs > button[data-sub] { flex-shrink: 0; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-card); font-size: 12px; font-weight: 600; color: var(--quiet); }
+    .sports-sub-tabs > button[data-sub].active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+    .sports-temp-wrap { flex-shrink: 0; margin-right: 4px; display: none; }
+    .sports-temp-dd-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent-dim); font-size: 12px; font-weight: 600; color: var(--accent); }
+
+    .sports-dd-overlay { position: fixed; inset: 0; z-index: 120; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
+    .sports-dd-overlay.open { display: flex; }
+    .sports-dd-sheet { width: 100%; max-width: var(--frame-phone); max-height: min(72dvh, 520px); background: var(--bg-elevated); border: 1px solid var(--line); border-bottom: 0; border-radius: 16px 16px 0 0; display: flex; flex-direction: column; margin-bottom: var(--bottom-nav-h); }
+    .sports-dd-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-bottom: 1px solid var(--line); }
+    .sports-dd-sheet-head h3 { font: 700 15px 'Syne', sans-serif; }
+    .sports-dd-sheet-head .sub { font-size: 10px; color: var(--quiet); font-weight: 600; margin-top: 2px; }
+    .sports-dd-sheet-close { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 16px; color: var(--quiet); }
+    .sports-dd-sheet-body { overflow-y: auto; padding: 8px 10px 20px; flex: 1; }
+    .sports-dd-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; border-radius: 10px; text-align: left; font-size: 13px; font-weight: 600; }
+    .sports-dd-item.selected { color: var(--accent); background: var(--accent-dim); }
+    .sports-dd-item .dd-label { flex: 1; }
+    .sports-dd-badge { margin-left: auto; min-width: 22px; text-align: center; background: var(--accent-dim); color: var(--accent); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; border: 1px solid rgba(0,212,255,.25); }
+    .sports-dd-section { padding: 12px 12px 4px; font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--quiet); }
+    .sports-dd-divider { height: 1px; background: var(--line); margin: 8px; }
+    .sports-temp-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 11px 12px; border-radius: 10px; text-align: left; font-size: 13px; font-weight: 600; }
+    .sports-temp-item.selected { color: var(--accent); background: var(--accent-dim); }
+    .sports-temp-item.indent { padding-left: 28px; font-size: 12px; font-weight: 500; color: var(--quiet); }
+    .sports-temp-item.indent.selected { color: var(--accent); }
+    .sports-temp-item .ti-label { flex: 1; display: flex; align-items: center; gap: 8px; }
+    .sports-dd-country { margin: 2px 0; border-radius: 10px; overflow: hidden; border: 1px solid transparent; }
+    .sports-dd-country.open { border-color: var(--line); background: var(--bg-soft); }
+    .sports-dd-country-head { display: flex; align-items: center; gap: 8px; width: 100%; padding: 11px 12px; border-radius: 10px; text-align: left; font-size: 13px; font-weight: 700; }
+    .sports-dd-country-head .co-chev { margin-left: auto; font-size: 10px; color: var(--quiet); transition: transform .18s; }
+    .sports-dd-country.open .sports-dd-country-head .co-chev { transform: rotate(180deg); color: var(--accent); }
+    .sports-dd-country-body { display: none; padding: 0 4px 6px; }
+    .sports-dd-country.open .sports-dd-country-body { display: block; }
+
+    .match-list { margin-bottom: 14px; }
+    .match-row { padding: 12px; background: var(--bg-card); border-bottom: 1px solid var(--line); }
+    .match-row:first-of-type { border-radius: 12px 12px 0 0; }
+    .match-row:last-child { border-radius: 0 0 12px 12px; border-bottom: 0; }
+    .match-meta { display: flex; justify-content: space-between; font-size: 9px; color: var(--quiet); margin-bottom: 10px; font-weight: 500; }
+    .league-meta { display: inline-flex; align-items: center; gap: 6px; }
+    .league-meta img { width: 14px; height: 14px; object-fit: contain; }
+    .match-line { display: flex; flex-direction: column; gap: 10px; }
+    .teams { display: flex; gap: 8px; align-items: center; width: 100%; cursor: pointer; }
+    .teams > div:not(.score) { display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 600; }
+    .team-logos { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    .team-mark, .team-logo { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: var(--bg-soft); overflow: hidden; }
+    .team-logo img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+    .team-logo.photo img { object-fit: cover; padding: 0; }
+    .team-mark { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
+    .score { margin-left: auto; text-align: center; white-space: nowrap; }
+    .score strong { font-size: 13px; font-weight: 700; }
+    .score small { display: block; color: var(--quiet); font-size: 9px; margin-top: 4px; font-weight: 600; }
+    .score .live-time { color: var(--accent); font-weight: 700; }
+    .odds-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 100%; }
+    .odd { background: var(--odd-bg); border: 1px solid var(--line); border-radius: 8px; min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; position: relative; color: var(--ink); font-weight: 600; }
+    .odd small { font-size: 9px; color: var(--quiet); font-weight: 600; }
+    .odd b { font-size: 13px; font-weight: 700; }
+    .odd.picked { background: var(--accent); color: #041018; border-color: var(--accent); }
+    [data-theme="light"] .odd.picked { color: #fff; }
+    .odd.picked small { color: inherit; opacity: .85; }
+    .movement { position: absolute; right: 4px; top: 3px; font-size: 9px; font-weight: 800; }
+    .movement.up { color: var(--success); } .movement.down { color: var(--danger); }
+
+    .cal-overlay { position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,.55); display: none; align-items: flex-start; justify-content: center; padding-top: 88px; }
+    .cal-overlay.open { display: flex; }
+    .cal-popup { width: calc(100% - 40px); max-width: 320px; background: var(--bg-elevated); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--line); gap: 6px; }
+    .cal-head h3 { font: 700 14px 'Syne', sans-serif; flex: 1; text-align: center; }
+    .cal-nav-btn, .cal-close-x { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; }
+    .cal-nav-btn { background: var(--bg-soft); font-size: 18px; font-weight: 700; }
+    .cal-nav-btn:disabled { opacity: .35; }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); padding: 10px 10px 2px; text-align: center; font-size: 10px; font-weight: 700; color: var(--quiet); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 10px 14px; gap: 3px; }
+    .cal-day { aspect-ratio: 1; max-height: 36px; display: grid; place-items: center; border-radius: 9px; font-size: 12px; font-weight: 600; }
+    .cal-day.out { color: var(--quiet); opacity: .4; }
+    .cal-day.disabled { opacity: .28; pointer-events: none; }
+    .cal-day.today:not(.selected) { border: 1.5px solid var(--accent); color: var(--accent); font-weight: 800; }
+    .cal-day.selected { background: var(--accent); color: #041018; font-weight: 800; }
+    [data-theme="light"] .cal-day.selected { color: #fff; }
+
+    .slip-page { flex: 1; min-height: 0; display: flex; flex-direction: column; background: var(--bg); transform: translateY(0); transition: transform .22s ease-out; }
+    .slip-page.pulling { transition: none; }
+    .slip-page-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--line); gap: 8px; background: var(--bg-elevated); position: sticky; top: 0; z-index: 40; flex-shrink: 0; }
+    .slip-close-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-soft); display: grid; place-items: center; }
+    .slip-close-btn svg { width: 20px; height: 20px; }
+    .slip-page-header h2 { font: 700 15px 'Syne', sans-serif; flex: 1; min-width: 0; }
+    .slip-wallet-btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--bg-soft); border-radius: 10px; padding: 6px 10px 6px 8px; font-size: 11px; font-weight: 700; max-width: 140px; }
+    .slip-wallet-btn svg { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; }
+    .slip-wallet-btn .w-sym { color: var(--quiet); font-size: 9px; margin-left: 2px; }
+    .slip-pull-hint { text-align: center; font-size: 10px; color: var(--quiet); padding: 6px 0 0; opacity: 0; transition: opacity .15s; pointer-events: none; }
+    .slip-pull-hint.show { opacity: 1; }
+    .tabs { display: flex; border-bottom: 1px solid var(--line); background: var(--bg); flex-shrink: 0; }
+    .tabs button { padding: 12px 6px; flex: 1; font-size: 11px; font-weight: 700; border-bottom: 2px solid transparent; color: var(--quiet); }
+    .tabs button.active { border-color: var(--accent); color: var(--accent); }
+    .tabs button span.tab-badge { margin-left: 4px; background: var(--danger); color: #fff; padding: 1px 6px; border-radius: 99px; font-size: 9px; font-weight: 800; min-width: 16px; display: inline-block; text-align: center; }
+    .tabs button span.tab-badge:empty, .tabs button span.tab-badge[data-n="0"] { display: none; }
+    #tab-slip span { margin-left: 4px; background: var(--bg-soft); padding: 2px 5px; border-radius: 3px; font-size: 9px; color: var(--quiet); }
+    .slip-page-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
+    .empty-slip { text-align: center; padding: 24px 16px 16px; }
+    .place-success { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 14px; padding: 12px 14px; border-radius: 12px; background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.35); color: var(--accent); font-size: 13px; font-weight: 700; }
+    .place-success .check { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #041018; display: grid; place-items: center; font-size: 13px; font-weight: 900; }
+    .btn-bet-now { display: block; width: calc(100% - 28px); margin: 0 auto 12px; background: var(--accent); color: #041018; font-weight: 800; font-size: 13px; padding: 14px; border-radius: 10px; font-family: 'Syne', sans-serif; }
+    [data-theme="light"] .btn-bet-now { color: #fff; }
+    .booking-code-bar { display: flex; gap: 8px; margin: 0 14px 16px; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); padding: 4px 4px 4px 12px; }
+    .booking-code-bar input { flex: 1; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 12px; font-weight: 600; min-width: 0; }
+    .booking-code-bar button { flex-shrink: 0; background: var(--accent-dim); color: var(--accent); font-size: 11px; font-weight: 700; padding: 10px 12px; border-radius: 8px; }
+    .mode-tabs { display: flex; gap: 8px; padding: 12px 14px 8px; }
+    .mode-tabs button { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--line); font-size: 12px; font-weight: 700; color: var(--quiet); background: var(--bg-soft); }
+    .mode-tabs button.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    .combo-note { margin: 0 14px 8px; font-size: 10px; color: var(--quiet); line-height: 1.4; padding: 8px 10px; background: var(--bg-soft); border-radius: 8px; }
+    .combo-summary { margin: 8px 14px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); }
+    .combo-summary .row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; color: var(--quiet); }
+    .combo-summary .row b { color: var(--ink); }
+    .combo-summary .row.total b { color: var(--accent); font-size: 13px; }
+    .combo-summary .row.bonus b { color: var(--success); }
+    .combo-bonus { margin: 0 14px 10px; padding: 12px; border-radius: 12px; border: 1px solid rgba(61,214,140,.35); background: rgba(61,214,140,.08); }
+    .combo-bonus-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .combo-bonus-head b { font-size: 14px; font-weight: 800; color: var(--success); }
+    .combo-bonus-track { height: 8px; border-radius: 99px; background: var(--bg-soft); border: 1px solid var(--line); overflow: hidden; }
+    .combo-bonus-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #1a9f5c, #3dd68c, #00d4ff); }
+    .combo-bonus-meta { margin-top: 8px; font-size: 10px; color: var(--quiet); }
+    .selection { padding: 14px; border-bottom: 1px solid var(--line); position: relative; }
+    .selection.is-suspended { background: rgba(255,92,92,.06); }
+    .selection.odds-changed { background: rgba(245,165,36,.08); }
+    .selection > small { color: var(--quiet); font-size: 9px; font-weight: 500; }
+    .selection h3 { font-size: 13px; margin: 6px 0; font-family: 'DM Sans', sans-serif; font-weight: 700; }
+    .remove { position: absolute; right: 8px; top: 10px; font-size: 16px; color: var(--quiet); width: 28px; height: 28px; border-radius: 6px; z-index: 2; }
+    .selection-odds { display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: var(--quiet); margin-bottom: 8px; }
+    .selection-odds b { color: var(--accent); font-size: 13px; }
+    .badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; }
+    .badge.warn { background: rgba(245,165,36,.18); color: var(--warn); }
+    .badge.danger { background: rgba(255,92,92,.15); color: var(--danger); }
+    .badge.ok { background: rgba(61,214,140,.15); color: var(--success); }
+    .badge.muted { background: var(--bg-soft); color: var(--quiet); }
+    .badge.info { background: var(--accent-dim); color: var(--accent); }
+    .badge.combo-n { background: var(--accent); color: #041018; min-width: 20px; text-align: center; }
+    .mybet-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 4px; }
+    .selection label { display: block; font-size: 9px; position: relative; color: var(--quiet); }
+    .selection input.stake-input { display: block; width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 10px 48px 10px 10px; margin-top: 5px; background: var(--input-bg); color: var(--ink); outline: none; }
+    .selection label > span.cur-suffix { position: absolute; right: 10px; bottom: 12px; font-size: 9px; color: var(--quiet); }
+    .return-line { display: flex; justify-content: space-between; font-size: 10px; margin-top: 10px; }
+    .return-line b { color: var(--accent); }
+    .min-bet-warn { display: block; margin-top: 6px; font-size: 10px; font-weight: 700; color: var(--danger); }
+    .min-bet-warn.hidden { display: none; }
+    .alert-box { margin: 10px 14px; padding: 10px 12px; border-radius: 8px; font-size: 11px; line-height: 1.5; border: 1px solid; }
+    .alert-box.warn { background: rgba(245,165,36,.1); border-color: rgba(245,165,36,.35); color: var(--warn); }
+    .alert-box.danger { background: rgba(255,92,92,.1); border-color: rgba(255,92,92,.3); color: var(--danger); }
+    .alert-box.ok { background: rgba(61,214,140,.1); border-color: rgba(61,214,140,.3); color: var(--success); }
+    .alert-box.info { background: var(--feedback-bg); border-color: transparent; color: var(--feedback-color); }
+    .quick-stakes { display: flex; gap: 6px; padding: 10px 14px; }
+    .quick-stakes button { flex: 1; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; padding: 10px; background: var(--bg-soft); font-weight: 700; }
+    .primary { background: var(--accent); color: #041018; border-radius: 10px; font-weight: 800; padding: 14px; width: calc(100% - 28px); margin: 0 14px 8px; font-size: 13px; font-family: 'Syne', sans-serif; }
+    [data-theme="light"] .primary { color: #fff; }
+    .btn-book { display: block; width: calc(100% - 28px); margin: 0 14px 12px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-dim); border-radius: 10px; font-weight: 700; padding: 12px; font-size: 12px; }
+    .booking-result { margin: 0 14px 12px; padding: 12px; border-radius: 10px; border: 1px dashed var(--accent); background: var(--accent-dim); }
+    .btn-copy-code { border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 8px 10px; font-size: 11px; font-weight: 700; }
+    .outline { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 11px; background: var(--bg-soft); margin-top: 8px; font-weight: 600; width: 100%; }
+    .outline.danger-outline { border-color: rgba(255,92,92,.4); color: var(--danger); }
+    .combo-head { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+    .combo-head .toggle-ico { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 10px; color: var(--quiet); flex-shrink: 0; margin-top: 2px; transition: transform .2s; }
+    .combo-head .toggle-ico.open { transform: rotate(180deg); color: var(--accent); border-color: var(--accent); }
+    .combo-head-body { flex: 1; min-width: 0; }
+    .combo-legs { margin-top: 10px; padding: 10px; border-radius: 10px; background: var(--bg-soft); border: 1px solid var(--line); display: none; }
+    .combo-legs.open { display: block; }
+    .combo-leg { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 11px; cursor: pointer; }
+    .combo-leg:last-child { border-bottom: 0; }
+    .combo-leg .cl-match { color: var(--quiet); font-size: 9px; margin-bottom: 2px; }
+    .combo-leg .cl-row { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; align-items: center; }
+    .slip-footer-row { display: flex; align-items: stretch; gap: 8px; margin: 8px 14px 16px; }
+    .btn-clear-all { width: 48px; flex-shrink: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-card); color: var(--danger); display: grid; place-items: center; }
+    .btn-clear-all svg { width: 18px; height: 18px; }
+    .odds-settings { flex: 1; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg-card); }
+    .odds-settings-head { display: flex; align-items: center; gap: 8px; width: 100%; padding: 12px 14px; font-size: 12px; font-weight: 700; }
+    .odds-settings-head .chev { margin-left: auto; color: var(--quiet); transition: transform .2s; }
+    .odds-settings.open .odds-settings-head .chev { transform: rotate(180deg); }
+    .odds-settings-body { display: none; padding: 0 14px 12px; border-top: 1px solid var(--line); }
+    .odds-settings.open .odds-settings-body { display: block; }
+    .odds-opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; text-align: left; }
+    .odds-opt:last-child { border-bottom: 0; }
+    .odds-opt input { margin-top: 2px; accent-color: var(--accent); }
+    .odds-opt span { font-size: 12px; font-weight: 600; line-height: 1.35; }
+    .odds-opt small { display: block; font-size: 10px; color: var(--quiet); font-weight: 500; margin-top: 2px; }
+    .filter-bets { display: flex; gap: 6px; padding: 10px 14px; flex-wrap: wrap; }
+    .filter-bets button { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); font-size: 10px; font-weight: 600; color: var(--quiet); }
+    .filter-bets button.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    .history-sub { display: flex; gap: 6px; padding: 0 14px 10px; flex-wrap: wrap; }
+    .history-sub button { padding: 5px 9px; border-radius: 6px; border: 1px solid var(--line); font-size: 10px; font-weight: 600; color: var(--quiet); background: var(--bg-soft); }
+    .history-sub button.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    .custom-date-box { margin: 0 14px 12px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-card); }
+    .custom-date-box .cdr-title { font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+    .custom-date-box .cdr-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: end; margin-bottom: 10px; }
+    .custom-date-box label { display: block; font-size: 9px; font-weight: 700; color: var(--quiet); margin-bottom: 4px; text-transform: uppercase; }
+    .custom-date-box input[type="date"] { width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--input-bg); color: var(--ink); padding: 10px; font-size: 12px; font-weight: 600; }
+    .custom-date-box .cdr-sep { font-size: 11px; font-weight: 800; color: var(--quiet); padding-bottom: 10px; text-align: center; }
+    .custom-date-actions { display: flex; gap: 8px; }
+    .custom-date-actions button { flex: 1; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .btn-cancel-date { border: 1px solid var(--line); background: var(--bg-soft); color: var(--quiet); }
+    .btn-show-date { background: var(--accent); color: #041018; }
+    .custom-range-hint { font-size: 10px; color: var(--quiet); margin-top: 8px; line-height: 1.4; }
+    .mybet-status { margin: 6px 0 8px; }
+    .mybet-meta { font-size: 11px; color: var(--quiet); line-height: 1.5; }
+    .mybet-meta b { color: var(--ink); }
+    .mybet-date { font-size: 9px; color: var(--quiet); margin-top: 6px; }
+    .mybet-card { position: relative; }
+    .mybet-card .mybet-open-detail { position: absolute; top: 10px; right: 10px; z-index: 3; font-size: 10px; font-weight: 700; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(0,212,255,.28); border-radius: 8px; padding: 6px 8px; }
+    .mybet-match-link { color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+    .mybet-card-body { cursor: pointer; padding-right: 72px; }
+    .sel-score-note { display: inline-flex; align-items: center; gap: 5px; margin-top: 4px; font-size: 10px; font-weight: 700; }
+    .sel-score-note.live { color: var(--accent); }
+    .sel-score-note.ft { color: var(--quiet); }
+    .sel-score-note .sc-val { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); }
+
+    .bet-detail-overlay { position: fixed; inset: 0; z-index: 130; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.62); }
+    .bet-detail-overlay.open { display: flex; }
+    .bet-detail-sheet { width: 100%; max-width: var(--frame-phone); max-height: min(88dvh, 640px); background: var(--bg-elevated); border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; margin-bottom: var(--bottom-nav-h); overflow: hidden; }
+    .bet-detail-brand { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; background: linear-gradient(180deg, rgba(0,212,255,.14), transparent); border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .bet-detail-brand .hb-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .bet-detail-brand .hb-title span { color: var(--ink); }
+    .bet-detail-brand .hb-sub { font-size: 10px; font-weight: 700; color: var(--quiet); margin-top: 3px; letter-spacing: .06em; text-transform: uppercase; }
+    .bet-detail-close { min-width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--bg-soft); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+    .bet-detail-close .x-ico { font-size: 20px; font-weight: 900; line-height: 1; }
+    .bet-detail-close .x-label { font-size: 8px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: var(--quiet); }
+    .bet-detail-body { overflow-y: auto; padding: 12px 14px 22px; flex: 1; min-height: 0; }
+    .bet-detail-id { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--accent-dim); border: 1px solid rgba(0,212,255,.28); margin-bottom: 12px; }
+    .bet-detail-id .id-label { font-size: 9px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--quiet); }
+    .bet-detail-id .id-value { font-size: 13px; font-weight: 800; color: var(--accent); word-break: break-all; margin-top: 3px; }
+    .bet-detail-id .copy-id-btn { border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 8px 10px; font-size: 10px; font-weight: 800; }
+    .bet-detail-status-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .bet-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .bet-detail-tile { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+    .bet-detail-tile small { display: block; font-size: 9px; font-weight: 700; color: var(--quiet); text-transform: uppercase; margin-bottom: 4px; }
+    .bet-detail-tile b { font-size: 14px; font-weight: 800; }
+    .bet-detail-tile b.accent { color: var(--accent); }
+    .bet-detail-tile b.ok { color: var(--success); }
+    .bet-detail-section { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+    .bet-detail-section h4 { font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+    .bet-detail-row { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); color: var(--quiet); }
+    .bet-detail-row:last-child { border-bottom: 0; }
+    .bet-detail-row b { color: var(--ink); font-weight: 700; text-align: right; }
+    .bet-detail-leg { padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .bet-detail-leg:last-child { border-bottom: 0; }
+    .bet-detail-leg .leg-match { font-size: 11px; color: var(--quiet); margin-bottom: 4px; }
+    .bet-detail-leg .leg-main { display: flex; justify-content: space-between; gap: 8px; align-items: center; font-size: 13px; font-weight: 800; }
+    .bet-detail-leg .leg-open-match { margin-top: 8px; display: inline-flex; font-size: 11px; font-weight: 800; color: var(--accent); }
+    .bet-detail-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .bet-detail-actions .primary { width: 100%; margin: 0; }
+    .bet-detail-actions .outline { margin: 0; }
+    .bet-detail-score-box { margin-bottom: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg-card); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .bet-detail-score-box .sc-left small { display: block; font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--quiet); margin-bottom: 3px; }
+    .bet-detail-score-box .sc-right { text-align: right; }
+    .bet-detail-score-box .sc-right .sc-val { font: 800 20px 'Syne', sans-serif; }
+    .bet-detail-score-box .sc-right .sc-state { display: block; font-size: 10px; font-weight: 800; margin-top: 2px; }
+    .bet-detail-score-box.live .sc-right .sc-state { color: var(--accent); }
+
+    .scoreboard {
+      background: linear-gradient(160deg, #071828 0%, #0c2540 40%, #0a1f38 100%);
+      color: #fff; padding: 0; border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(0,212,255,.18); overflow: hidden; position: relative;
+    }
+    .sb-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 6px; position: relative; z-index: 1; }
+    .sb-status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+    .sb-status .live-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 1.6s ease infinite; }
+    .sb-league { font-size: 10px; color: #8aa8c0; font-weight: 600; }
+    .sb-main { display: flex; align-items: stretch; padding: 8px 12px 14px; position: relative; z-index: 1; }
+    .sb-team-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+    .sb-team-col .crest { width: 52px; height: 52px; border-radius: 14px; border: 2px solid rgba(0,212,255,.35); background: rgba(255,255,255,.06); overflow: hidden; display: grid; place-items: center; }
+    .sb-team-col.away .crest { border-color: rgba(255,255,255,.15); }
+    .sb-team-col .crest.photo { border-radius: 50%; }
+    .sb-team-col .crest img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+    .sb-team-col .crest.photo img { object-fit: cover; padding: 0; }
+    .sb-team-col .crest.fallback { font: 700 18px 'Syne', sans-serif; }
+    .sb-team-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: #fff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sb-center { width: 72px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .sb-clock { font-size: 10px; font-weight: 800; color: var(--accent); background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.28); border-radius: 6px; padding: 3px 8px; text-transform: uppercase; }
+    .sb-scores { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 4px 0; }
+    .sb-score-num { font: 800 28px 'Syne', sans-serif; color: #fff; line-height: 1; }
+    .sb-score-sep { width: 18px; height: 2px; background: linear-gradient(90deg, transparent, rgba(0,212,255,.5), transparent); }
+    .sb-vs { font-size: 11px; font-weight: 800; color: #6a849c; letter-spacing: 0.12em; }
+    .sb-odds-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 12px 14px; position: relative; z-index: 1; }
+    .sb-odd-btn { background: rgba(13,36,56,.85); border: 1px solid rgba(0,212,255,.2); border-radius: 10px; min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 6px; color: #fff; }
+    .sb-odd-btn.picked { background: var(--accent); border-color: var(--accent); color: #041018; }
+    .sb-odd-btn small { font-size: 9px; font-weight: 700; opacity: .7; text-transform: uppercase; }
+    .sb-odd-btn b { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; }
+    .sb-actions { display: flex; justify-content: center; gap: 8px; padding: 0 12px 14px; position: relative; z-index: 1; }
+    .sb-actions button { border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 8px 14px; font-size: 11px; font-weight: 700; color: #c8d8e8; background: rgba(255,255,255,.04); }
+
+    .mobile-slip {
+      display: flex; position: fixed; bottom: calc(var(--bottom-nav-h) + 14px);
+      right: calc(50% - min(50%, var(--frame-phone) / 2) + 16px);
+      width: 58px; height: 58px; border-radius: 50%; z-index: 60; background: var(--accent); color: #041018;
+      align-items: center; justify-content: center; flex-direction: column; gap: 1px; font-weight: 800;
+      box-shadow: 0 6px 24px rgba(0,212,255,.35); text-align: center; font-family: 'Syne', sans-serif;
+    }
+    [data-theme="light"] .mobile-slip { color: #fff; }
+    .mobile-slip.hidden-fab { display: none; }
+    .mobile-slip b { font-size: 7px; line-height: 1.05; max-width: 50px; }
+    .mobile-slip .slip-count { font-size: 12px; font-weight: 800; }
+    .mobile-slip .slip-badge { position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 800; display: grid; place-items: center; border: 2px solid var(--bg); }
+    .mobile-slip .slip-badge:empty, .mobile-slip .slip-badge[data-count="0"] { display: none; }
+
+    .slip-wallet-overlay { position: fixed; inset: 0; z-index: 85; display: none; flex-direction: column; background: rgba(0,0,0,.55); align-items: center; justify-content: flex-end; }
+    .slip-wallet-overlay.open { display: flex; }
+    .slip-wallet-sheet { width: 100%; max-width: var(--frame-phone); background: var(--bg-elevated); border-radius: 16px 16px 0 0; border: 1px solid var(--line); border-bottom: 0; max-height: 85dvh; display: flex; flex-direction: column; margin-bottom: var(--bottom-nav-h); }
+    .slip-wallet-sheet .wallet-float-body { overflow-y: auto; flex: 1; padding-bottom: 20px; }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--frame-phone); height: var(--bottom-nav-h); background: var(--bg-elevated); border-top: 1px solid var(--line); display: flex; z-index: 80; backdrop-filter: blur(12px); }
+    .bottom-nav button { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--quiet); }
+    .bottom-nav button.active { color: var(--accent); }
+    .bottom-nav button svg { width: 22px; height: 22px; stroke-width: 2; }
+    .bottom-nav button.active svg { stroke: var(--accent); }
+
+    .market-tabs { display: flex; overflow-x: auto; margin-bottom: 12px; border-bottom: 1px solid var(--line); gap: 2px; scrollbar-width: none; }
+    .market-tabs button { padding: 11px 12px; white-space: nowrap; font-size: 11px; border-bottom: 2px solid transparent; color: var(--quiet); font-weight: 600; }
+    .market-tabs .active { color: var(--accent); border-color: var(--accent); font-weight: 700; }
+    .market { background: var(--bg-card); padding: 14px; margin-bottom: 10px; border-radius: 12px; border: 1px solid var(--line); }
+    .market h3 { font-size: 13px; margin-bottom: 12px; }
+    .market-options { display: flex; flex-wrap: wrap; gap: 8px; }
+    .market-options .odd { flex: 1; min-width: 90px; flex-direction: column; align-items: center; text-align: center; gap: 6px; min-height: 56px; font-size: 11px; }
+    .list-empty { text-align: center; background: var(--empty-bg); padding: 32px 16px; border-radius: 12px; border: 1px solid var(--line); }
+    .list-empty h3 { font-size: 14px; margin-bottom: 8px; }
+    .list-empty p { font-size: 12px; color: var(--quiet); }
+    .league-block { margin-bottom: 16px; }
+    .league-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .league-head img { width: 22px; height: 22px; object-fit: contain; }
+    .league-head h3 { font-size: 13px; font-weight: 700; }
+    .live-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); animation: pulse 1.6s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+    .pred-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+    .pred-card .pc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .pred-card .pc-conf { font-size: 10px; font-weight: 800; color: var(--success); background: rgba(61,214,140,.12); padding: 4px 8px; border-radius: 6px; }
+    .pred-card h3 { font-size: 14px; margin-bottom: 4px; }
+    .pred-card p { font-size: 12px; color: var(--quiet); line-height: 1.45; margin-bottom: 10px; }
+    .pred-card .pc-pick { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--accent-dim); border: 1px solid rgba(0,212,255,.25); }
+    .pred-card .pc-pick b { color: var(--accent); font-size: 14px; }
+    .fav-star-btn { position: absolute; top: 8px; right: 8px; z-index: 3; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,0,0,.4); color: #fff; font-size: 14px; display: grid; place-items: center; }
+    .fav-star-btn.on { color: #ff6b9d; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header class="topbar">
+      <a href="#" class="brand" onclick="showView('home'); return false;">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>
+        </span>
+        <span class="brand-word"><span class="hb-house">House</span><span class="hb-bets">bets</span><span class="hb-dot">.</span></span>
+      </a>
+      <div class="top-right">
+        <button type="button" class="icon-btn" onclick="toggleTheme()" title="Tema">
+          <svg id="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+        <button type="button" class="wallet-icon-btn" onclick="openMainWallet(event)" title="Dompet">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg>
+        </button>
+        <span class="balance" id="balance-display">1.000,00 <small>USDT DEMO</small></span>
+        <div class="avatar">D</div>
+      </div>
+    </header>
+
+    <main class="main-content" id="main-content">
+      <div class="page-tabs-wrap" id="page-tabs-wrap">
+        <div class="page-tab-home">
+          <button type="button" class="active" data-view="home" id="tab-home-fixed" onclick="showView('home')">Home</button>
+        </div>
+        <nav class="page-tabs" id="page-tabs">
+          <button type="button" data-view="live" onclick="showView('live')">Live</button>
+          <button type="button" data-view="upcoming" onclick="showView('upcoming')">Upcoming</button>
+          <button type="button" data-view="football" onclick="showView('football')">Sports</button>
+          <button type="button" data-view="slip" onclick="showView('slip')">My Bet</button>
+          <button type="button" data-view="prediction" onclick="showView('prediction')">Prediction</button>
+          <button type="button" data-view="favorite" onclick="showView('favorite')">Favorite</button>
+        </nav>
+      </div>
+
+      <div id="view-home" class="view active">
+        <div class="home-sticky">
+          <button type="button" class="search-trigger" onclick="openSearchOverlay()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>Cari tim, pemain, kompetisi…</span>
+          </button>
+          <div class="sport-nav" id="home-sport-nav"></div>
+        </div>
+        <div class="home-scroll-body">
+          <div class="section-title" style="margin-top:4px"><h2>Top competitions</h2></div>
+          <div class="inf-wrap"><div class="inf-track" id="top-comps-banner"></div></div>
+          <div class="section-title"><h2>Top Live</h2><button type="button" class="see-all" onclick="showView('live')">Lihat Semua</button></div>
+          <div class="hl-wrap"><div class="hl-track" id="live-highlights"></div></div>
+          <div class="section-title"><h2>Top Upcoming</h2><button type="button" class="see-all" onclick="showView('upcoming')">Lihat Semua</button></div>
+          <div class="hl-wrap"><div class="hl-track" id="top-upcoming-banners"></div></div>
+          <section class="match-list">
+            <div class="section-title"><h2>Live Now <span id="live-count">0</span></h2><button type="button" class="see-all" onclick="showView('live')">Lihat Semua</button></div>
+            <div id="live-matches" class="stack-banners"></div>
+            <button type="button" class="expand-more-btn" id="live-expand-btn" style="display:none" onclick="toggleHomeLiveExpand()"><span id="live-expand-text">Tampilkan semua</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+          </section>
+          <section class="match-list">
+            <div class="section-title"><h2>Upcoming <span id="home-upcoming-count">0</span></h2><button type="button" class="see-all" onclick="showView('upcoming')">Lihat Semua</button></div>
+            <div id="upcoming-matches-home" class="stack-banners"></div>
+            <button type="button" class="expand-more-btn" id="upcoming-expand-btn" style="display:none" onclick="toggleHomeUpcomingExpand()"><span id="upcoming-expand-text">Tampilkan semua</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>
+          </section>
+        </div>
+      </div>
+
+      <div id="view-live" class="view">
+        <div class="live-sticky"><div class="live-sport-scroll" id="live-sport-nav"></div></div>
+        <div class="live-body" style="padding-top:8px">
+          <div class="section-title" style="margin-top:4px"><h2>Live <span id="live-page-count">0</span></h2></div>
+          <div id="live-only"></div>
+          <div id="live-fallback" style="display:none"></div>
+        </div>
+      </div>
+
+      <div id="view-upcoming" class="view">
+        <div class="upcoming-sticky">
+          <div class="upcoming-sport-scroll" id="upcoming-sport-nav"></div>
+          <div class="upcoming-date-row">
+            <div class="upcoming-dates" id="upcoming-dates"></div>
+            <button type="button" class="cal-icon-btn" onclick="openUpcomingCalendar()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="22" height="22"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="upcoming-body" style="padding-top:8px">
+          <div class="section-title" style="margin-top:4px"><h2>Upcoming <span id="upcoming-count">0</span></h2></div>
+          <div id="upcoming-matches"></div>
+        </div>
+      </div>
+
+      <div id="view-football" class="view">
+        <div class="sports-sticky">
+          <div class="sports-cat-row">
+            <button type="button" class="sports-dd-btn active" id="dd-sports-btn" onclick="openSportsSheet('sports')"><span id="dd-sports-label">⚽ Sports</span> <span class="dd-chev">▼</span></button>
+            <button type="button" class="sports-dd-btn" id="dd-esports-btn" onclick="openSportsSheet('esports')"><span id="dd-esports-label">🎮 E-Sports</span> <span class="dd-chev">▼</span></button>
+            <button type="button" class="sports-dd-btn" id="dd-racing-btn" onclick="openSportsSheet('racing')"><span id="dd-racing-label">🏇 Racing</span> <span class="dd-chev">▼</span></button>
+          </div>
+          <div class="sports-sub-tabs" id="sports-sub-tabs">
+            <div class="sports-temp-wrap" id="sports-temp-wrap">
+              <button type="button" class="sports-temp-dd-btn" id="sports-temp-btn" onclick="openTempSheet()"><span id="sports-temp-label">Football</span> <span class="dd-chev">▼</span></button>
+            </div>
+            <button type="button" data-sub="all" onclick="setSportsSub('all')">All</button>
+            <button type="button" class="active" data-sub="top" onclick="setSportsSub('top')">Top</button>
+            <button type="button" data-sub="live" onclick="setSportsSub('live')">Live</button>
+            <button type="button" data-sub="upcoming" onclick="setSportsSub('upcoming')">Upcoming</button>
+          </div>
+        </div>
+        <div class="sports-body" style="padding-top:8px"><div id="football-matches"></div></div>
+      </div>
+
+      <div id="view-prediction" class="view">
+        <div class="section-title" style="margin-top:4px"><h2>Prediction</h2></div>
+        <div id="prediction-list"></div>
+      </div>
+
+      <div id="view-favorite" class="view">
+        <div class="section-title" style="margin-top:4px"><h2>Favorite</h2></div>
+        <div id="favorite-list" class="stack-banners"></div>
+      </div>
+
+      <div id="view-match" class="view"><div id="match-detail"></div></div>
+
+      <div id="view-slip" class="view">
+        <div class="slip-page" id="slip-page">
+          <div class="slip-pull-hint" id="slip-pull-hint">↓ Lepas untuk tutup</div>
+          <div class="slip-page-header">
+            <button type="button" class="slip-close-btn" onclick="closeSlip()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <h2>My Bet</h2>
+            <div class="slip-header-right">
+              <button type="button" class="slip-wallet-btn" onclick="toggleSlipWallet(event)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><circle cx="17" cy="14" r="1.5" fill="currentColor"/></svg>
+                <span class="w-bal" id="slip-wallet-bal">1.000,00</span><span class="w-sym" id="slip-wallet-sym">USDT</span>
+              </button>
+            </div>
+          </div>
+          <div class="tabs">
+            <button type="button" id="tab-slip" class="active" onclick="switchTab('slip')">BET SLIP <span id="sel-count">0</span></button>
+            <button type="button" id="tab-bets" onclick="switchTab('bets')">History <span class="tab-badge" id="open-bet-badge" data-n="0"></span></button>
+          </div>
+          <div class="slip-page-body" id="slip-sheet-body"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-overlay-head">
+      <button type="button" class="search-back-btn" onclick="closeSearchOverlay()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="18" height="18"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="search-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:.6"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="search-overlay-input" placeholder="Cari tim, pemain, kompetisi…" autocomplete="off" />
+        <button type="button" class="search-clear-btn" id="search-clear-btn" onclick="clearSearchInput()">×</button>
+      </div>
+    </div>
+    <div class="search-overlay-body" id="search-overlay-body"></div>
+  </div>
+
+  <div class="bet-detail-overlay" id="bet-detail-overlay" onclick="closeBetDetail(event)">
+    <div class="bet-detail-sheet" onclick="event.stopPropagation()">
+      <div class="bet-detail-brand">
+        <div><div class="hb-title">HOUSE<span>BETS</span></div><div class="hb-sub" id="bet-detail-sub">Rincian Taruhan</div></div>
+        <button type="button" class="bet-detail-close" onclick="closeBetDetail(true)"><span class="x-ico">×</span><span class="x-label">Tutup</span></button>
+      </div>
+      <div class="bet-detail-body" id="bet-detail-body"></div>
+    </div>
+  </div>
+
+  <div class="sports-dd-overlay" id="sports-dd-overlay" onclick="closeSportsSheet(event)">
+    <div class="sports-dd-sheet" onclick="event.stopPropagation()">
+      <div class="sports-dd-sheet-head">
+        <div><h3 id="sports-dd-sheet-title">Pilih olahraga</h3><div class="sub" id="sports-dd-sheet-sub">Sports · E-Sports · Racing</div></div>
+        <button type="button" class="sports-dd-sheet-close" onclick="closeSportsSheet()">×</button>
+      </div>
+      <div class="sports-dd-sheet-body" id="sports-dd-sheet-body"></div>
+    </div>
+  </div>
+
+  <div class="wallet-float-overlay" id="wallet-float-overlay" onclick="closeMainWallet(event)">
+    <div class="wallet-float" onclick="event.stopPropagation()">
+      <div class="wallet-float-head"><div><h3>Dompet</h3><div class="sub">Pilih mata uang untuk bertaruh</div></div><button type="button" class="wallet-float-close" onclick="closeMainWallet()">×</button></div>
+      <div class="wallet-float-active" id="wallet-float-active"></div>
+      <div class="wallet-float-body" id="wallet-float-body"></div>
+    </div>
+  </div>
+
+  <div class="slip-wallet-overlay" id="slip-wallet-overlay" onclick="closeSlipWallet(event)">
+    <div class="slip-wallet-sheet" onclick="event.stopPropagation()">
+      <div class="wallet-float-head"><div><h3>Dompet</h3><div class="sub">Pilih mata uang untuk bertaruh</div></div><button type="button" class="wallet-float-close" onclick="closeSlipWallet()">×</button></div>
+      <div class="wallet-float-active" id="slip-wallet-active"></div>
+      <div class="wallet-float-body" id="slip-wallet-body"></div>
+    </div>
+  </div>
+
+  <div class="cal-overlay" id="cal-overlay" onclick="closeUpcomingCalendar(event)">
+    <div class="cal-popup" onclick="event.stopPropagation()">
+      <div class="cal-head">
+        <button type="button" class="cal-nav-btn" id="cal-prev" onclick="shiftCalMonth(-1)">‹</button>
+        <h3 id="cal-month-label">November 2026</h3>
+        <button type="button" class="cal-nav-btn" id="cal-next" onclick="shiftCalMonth(1)">›</button>
+        <button type="button" class="cal-close-x" onclick="closeUpcomingCalendar()">×</button>
+      </div>
+      <div class="cal-weekdays"><span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+  </div>
+
+  <a href="#" class="mobile-slip" id="mobile-slip-fab" onclick="showView('slip'); return false;">
+    <b>BET SLIP</b>
+    <span class="slip-count" id="mobile-sel-count">0</span>
+    <span class="slip-badge" id="slip-badge" data-count="0"></span>
+  </a>
+
+  <nav class="bottom-nav">
+    <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menu</button>
+    <button type="button" class="active" onclick="showView('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Sports</button>
+    <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/></svg>Casino</button>
+    <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat</button>
+    <button type="button" onclick="openSearchOverlay()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search</button>
+  </nav>
+
+  <script>
+  const CREST='https://crests.football-data.org',ESPN='https://a.espncdn.com/i/teamlogos',ESPN_LEAGUE='https://a.espncdn.com/i/teamlogos/leagues/500',FLAG='https://flagcdn.com/w80',ICON_CDN='https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/',API_SPORTS='https://media.api-sports.io/football/leagues',MIN_STAKE=0.5;
+  const SPORT_LIST=['Semua','Sepak bola','Basket','Tenis','Baseball','American Football','Hockey','MMA / UFC','Formula 1','Cricket','Esports','Voli','Golf','Rugby','e-Football','e-Basketball','e-Cricket','Horse Racing'];
+  const SPORT_ICON={'Sepak bola':'⚽','Basket':'🏀','Tenis':'🎾','Baseball':'⚾','American Football':'🏈','Hockey':'🏒','MMA / UFC':'🥊','Formula 1':'🏎️','Cricket':'🏏','Esports':'🎮','Voli':'🏐','Golf':'⛳','Rugby':'🏉','e-Football':'⚽','e-Basketball':'🏀','e-Cricket':'🏏','Horse Racing':'🏇','Semua':'🏆'};
+  const DAY_SHORT=['Min','Sen','Sel','Rab','Kam','Jum','Sab'],MONTH_SHORT=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],MONTH_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const LIVE_SPORT_PRIORITY=['Sepak bola','Basket','Tenis','American Football','Baseball','Hockey','Esports','MMA / UFC','Formula 1','Cricket','Voli','Rugby','Golf','e-Football','e-Basketball','e-Cricket','Horse Racing'];
+  const COUNTRY_FLAG={'England':'gb-eng','Spain':'es','Italy':'it','Germany':'de','France':'fr','Netherlands':'nl','Portugal':'pt','Brazil':'br','Argentina':'ar','Indonesia':'id','USA':'us','UK':'gb','Australia':'au','China':'cn','Japan':'jp','Korea':'kr','Turkey':'tr','Greece':'gr','Belgium':'be','Mexico':'mx','Canada':'ca','Poland':'pl','Sweden':'se','Norway':'no','Denmark':'dk','Switzerland':'ch','Austria':'at','Scotland':'gb-sct','Wales':'gb-wls','Ireland':'ie','Russia':'ru','Ukraine':'ua','Croatia':'hr','Serbia':'rs','Czech Republic':'cz','Romania':'ro','Egypt':'eg','Saudi Arabia':'sa','Chile':'cl','Colombia':'co','Philippines':'ph','Lithuania':'lt','Monaco':'mc','UAE':'ae','Hong Kong':'hk','New Zealand':'nz','South Africa':'za','Qatar':'qa','Singapore':'sg','Hungary':'hu','Azerbaijan':'az','Bahrain':'bh','Global':'un','Europe':'eu','North America':'us'};
+  function flagHTML(country,cls){var code=COUNTRY_FLAG[country];if(!code)return'';return'<img class="flag-ico'+(cls?' '+cls:'')+'" src="'+FLAG+'/'+code+'.png" alt="'+country+'" loading="lazy" onerror="this.style.display=\'none\'">';}
+  function sportIconHTML(sport,size){return'<span class="sp-ico-wrap'+(size==='lg'?' lg':'')+'">'+(SPORT_ICON[sport]||'🏅')+'</span>';}
+  const ATH={alcaraz:'https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/30880.png&w=200&h=200&scale=crop',sinner:'https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/4252.png&w=200&h=200&scale=crop',swiatek:'https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/3180.png&w=200&h=200&scale=crop',gauff:'https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/3866.png&w=200&h=200&scale=crop',jones:'https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/2330.png&w=200&h=200&scale=crop',miocic:'https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/2508.png&w=200&h=200&scale=crop',adesanya:'https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/3080.png&w=200&h=200&scale=crop',duplessis:'https://a.espncdn.com/combiner/i?img=/i/headshots/mma/players/full/4010.png&w=200&h=200&scale=crop',verstappen:'https://a.espncdn.com/combiner/i?img=/i/headshots/rpm/players/full/4686.png&w=200&h=200&scale=crop',norris:'https://a.espncdn.com/combiner/i?img=/i/headshots/rpm/players/full/5579.png&w=200&h=200&scale=crop',hamilton:'https://a.espncdn.com/combiner/i?img=/i/headshots/rpm/players/full/868.png&w=200&h=200&scale=crop',leclerc:'https://a.espncdn.com/combiner/i?img=/i/headshots/rpm/players/full/5469.png&w=200&h=200&scale=crop',scheffler:'https://a.espncdn.com/combiner/i?img=/i/headshots/golf/players/full/9478.png&w=200&h=200&scale=crop',mcilroy:'https://a.espncdn.com/combiner/i?img=/i/headshots/golf/players/full/3470.png&w=200&h=200&scale=crop',rahm:'https://a.espncdn.com/combiner/i?img=/i/headshots/golf/players/full/9780.png&w=200&h=200&scale=crop',schauffele:'https://a.espncdn.com/combiner/i?img=/i/headshots/golf/players/full/10140.png&w=200&h=200&scale=crop'};
+  const SPORTS_DD_ITEMS=[{id:'Sepak bola',label:'Football',icon:'⚽'},{id:'Basket',label:'Basketball',icon:'🏀'},{id:'Tenis',label:'Tennis',icon:'🎾'},{id:'Baseball',label:'Baseball',icon:'⚾'},{id:'American Football',label:'American Football',icon:'🏈'},{id:'Hockey',label:'Hockey',icon:'🏒'},{id:'MMA / UFC',label:'MMA / UFC',icon:'🥊'},{id:'Cricket',label:'Cricket',icon:'🏏'},{id:'Voli',label:'Volleyball',icon:'🏐'},{id:'Golf',label:'Golf',icon:'⛳'},{id:'Rugby',label:'Rugby',icon:'🏉'},{id:'e-Football',label:'eFootball',icon:'⚽'},{id:'e-Basketball',label:'eBasketball',icon:'🏀'},{id:'e-Cricket',label:'eCricket',icon:'🏏'}];
+  const ESPORTS_DD_ITEMS=[{id:'CS2',label:'CS2',icon:'🔫',sportKey:'Esports',leagueHint:'CS2'},{id:'Call of Duty',label:'Call of Duty',icon:'🎯',sportKey:'Esports',leagueHint:'Call of Duty'},{id:'League of Legends',label:'League of Legends',icon:'⚔️',sportKey:'Esports',leagueHint:'LoL'},{id:'MLBB',label:'MLBB / MPL',icon:'📱',sportKey:'Esports',leagueHint:'MPL'},{id:'Dota 2',label:'Dota 2',icon:'🛡️',sportKey:'Esports',leagueHint:'Dota'},{id:'Valorant',label:'Valorant',icon:'🟣',sportKey:'Esports',leagueHint:'Valorant'}];
+  const RACING_DD_ITEMS=[{id:'Horse Racing',label:'Horse Racing',icon:'🏇',sportKey:'Horse Racing'},{id:'Formula 1',label:'Formula 1',icon:'🏎️',sportKey:'Formula 1'},{id:'MotoGP',label:'MotoGP',icon:'🏍️',sportKey:'MotoGP'},{id:'NASCAR',label:'NASCAR',icon:'🏁',sportKey:'NASCAR'}];
+  const SPORT_TOURNAMENTS={'Sepak bola':{international:['Champions League','Europa League','Conference League','World Cup','Euro','Copa America','AFC Champions League'],topCountries:[{country:'England',tournaments:['Premier League','Championship','FA Cup','EFL Cup']},{country:'Spain',tournaments:['LaLiga','LaLiga 2','Copa del Rey']},{country:'Italy',tournaments:['Serie A','Serie B','Coppa Italia']},{country:'Germany',tournaments:['Bundesliga','2. Bundesliga','DFB-Pokal']},{country:'France',tournaments:['Ligue 1','Ligue 2','Coupe de France']},{country:'Netherlands',tournaments:['Eredivisie','KNVB Cup']},{country:'Portugal',tournaments:['Primeira Liga','Taça de Portugal']},{country:'Brazil',tournaments:['Brasileirão','Copa do Brasil']},{country:'Argentina',tournaments:['Liga Profesional','Copa Argentina']},{country:'Indonesia',tournaments:['Liga 1','Piala Presiden']}],allCountries:['Argentina','Australia','Austria','Belgium','Brazil','Chile','China','Colombia','Croatia','Czech Republic','Denmark','Egypt','England','France','Germany','Greece','Indonesia','Italy','Japan','Mexico','Netherlands','Norway','Poland','Portugal','Romania','Russia','Saudi Arabia','Scotland','Serbia','South Korea','Spain','Sweden','Switzerland','Turkey','Ukraine','USA','Wales']},'Basket':{international:['EuroLeague','EuroCup','FIBA World Cup','Olympics'],topCountries:[{country:'USA',tournaments:['NBA','NBA G League','NCAA']},{country:'Spain',tournaments:['Liga ACB','Copa del Rey']},{country:'Italy',tournaments:['Lega Basket Serie A']},{country:'Turkey',tournaments:['BSL']},{country:'Greece',tournaments:['Greek Basket League']},{country:'China',tournaments:['CBA']},{country:'Australia',tournaments:['NBL']}],allCountries:['Argentina','Australia','Brazil','Canada','China','France','Germany','Greece','Italy','Japan','Lithuania','Philippines','Serbia','Spain','Turkey','USA']},'Tenis':{international:['ATP Masters','Wimbledon','US Open','French Open','Australian Open','ATP Finals','WTA Finals'],topCountries:[{country:'USA',tournaments:['US Open','Indian Wells','Miami Open']},{country:'UK',tournaments:['Wimbledon',"Queen's Club"]},{country:'France',tournaments:['French Open','Paris Masters']},{country:'Australia',tournaments:['Australian Open']},{country:'Italy',tournaments:['Rome Masters']},{country:'Spain',tournaments:['Madrid Open','Barcelona Open']}],allCountries:['Australia','Austria','Canada','China','France','Germany','Italy','Japan','Mexico','Spain','Switzerland','UK','USA']},'Esports':{international:['CS2 Major','LoL Worlds','The International','Valorant Champions','Call of Duty League Championship','MPL Invitational'],topCountries:[{country:'Global',tournaments:['CS2 Major','LoL Worlds','Call of Duty League']},{country:'Indonesia',tournaments:['MPL ID','MPL / MLBB']},{country:'Philippines',tournaments:['MPL PH']},{country:'Korea',tournaments:['LCK','KeSPA Cup']},{country:'China',tournaments:['LPL']},{country:'Europe',tournaments:['LEC','BLAST Premier']},{country:'North America',tournaments:['LCS','CDL']}],allCountries:['Brazil','China','Europe','Indonesia','Korea','North America','Philippines','Russia','Turkey']},'Horse Racing':{international:['Ascot','Melbourne Cup','Kentucky Derby',"Prix de l'Arc de Triomphe",'Dubai World Cup'],topCountries:[{country:'UK',tournaments:['Ascot','Cheltenham','Epsom Derby']},{country:'Australia',tournaments:['Melbourne Cup','Cox Plate']},{country:'USA',tournaments:['Kentucky Derby',"Breeders' Cup"]},{country:'France',tournaments:["Prix de l'Arc de Triomphe"]},{country:'UAE',tournaments:['Dubai World Cup']},{country:'Hong Kong',tournaments:['Hong Kong Cup']},{country:'Japan',tournaments:['Japan Cup']}],allCountries:['Australia','France','Hong Kong','Ireland','Japan','New Zealand','South Africa','UAE','UK','USA']},'Formula 1':{international:['Formula 1 World Championship','Grand Prix'],topCountries:[{country:'Monaco',tournaments:['Monaco Grand Prix']},{country:'Italy',tournaments:['Italian Grand Prix','Monza']},{country:'UK',tournaments:['British Grand Prix','Silverstone']},{country:'USA',tournaments:['United States Grand Prix','Miami GP','Las Vegas GP']},{country:'Japan',tournaments:['Japanese Grand Prix','Suzuka']},{country:'Australia',tournaments:['Australian Grand Prix']}],allCountries:['Australia','Austria','Azerbaijan','Bahrain','Belgium','Brazil','Canada','China','France','Hungary','Italy','Japan','Mexico','Monaco','Netherlands','Qatar','Saudi Arabia','Singapore','Spain','UAE','UK','USA']}};
+  function getTournamentData(sportId){if(SPORT_TOURNAMENTS[sportId])return SPORT_TOURNAMENTS[sportId];return{international:['International Tournament','World Championship'],topCountries:[{country:'USA',tournaments:['National League']},{country:'UK',tournaments:['Premier Competition']}],allCountries:['Australia','Brazil','Canada','China','France','Germany','Italy','Japan','Spain','UK','USA']};}
+  function countTournamentsForSportKey(sportKey){var data=getTournamentData(sportKey),set={};(data.international||[]).forEach(function(t){set[t]=1;});(data.topCountries||[]).forEach(function(c){(c.tournaments||[]).forEach(function(t){set[t]=1;});});return Object.keys(set).length;}
+  function countTournamentsForDdItem(cat,item){if(cat==='sports')return countTournamentsForSportKey(item.id);if(cat==='esports')return countTournamentsForSportKey('Esports');if(cat==='racing'){if(item.id==='Horse Racing'||item.id==='Formula 1')return countTournamentsForSportKey(item.id);return 2;}return 0;}
+  function resolveTournamentSportKey(){var key=selectedSportId;if(sportsCat==='esports')key='Esports';if(sportsCat==='racing'&&selectedSportId==='Horse Racing')key='Horse Racing';if(sportsCat==='racing'&&selectedSportId==='Formula 1')key='Formula 1';return key;}
+  function countMatchesForTournamentFilter(filterValue){return matches.filter(function(m){if(m.finished)return false;if(!matchBelongsToSelectedSport(m))return false;if(!filterValue)return true;var league=(m.league||'').toLowerCase(),t=String(filterValue).toLowerCase();return league.indexOf(t)>=0;}).length;}
+
+  const competitions=[
+    {id:'pl',name:'Premier League',sport:'Sepak bola',logo:API_SPORTS+'/39.png'},{id:'ucl',name:'Champions League',sport:'Sepak bola',logo:API_SPORTS+'/2.png'},{id:'laliga',name:'LaLiga',sport:'Sepak bola',logo:API_SPORTS+'/140.png'},{id:'seriea',name:'Serie A',sport:'Sepak bola',logo:API_SPORTS+'/135.png'},{id:'bundes',name:'Bundesliga',sport:'Sepak bola',logo:API_SPORTS+'/78.png'},{id:'ligue1',name:'Ligue 1',sport:'Sepak bola',logo:API_SPORTS+'/61.png'},{id:'nba',name:'NBA',sport:'Basket',logo:ESPN_LEAGUE+'/nba.png'},{id:'eurol',name:'EuroLeague',sport:'Basket',logo:'https://upload.wikimedia.org/wikipedia/commons/8/8c/Euroleague.png'},{id:'atp',name:'ATP Masters',sport:'Tenis',logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/ATP_Tour_logo.svg/320px-ATP_Tour_logo.svg.png'},{id:'wimb',name:'Wimbledon',sport:'Tenis',logo:'https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Wimbledon.svg/200px-Wimbledon.svg.png'},{id:'mlb',name:'MLB',sport:'Baseball',logo:ESPN_LEAGUE+'/mlb.png'},{id:'nfl',name:'NFL',sport:'American Football',logo:ESPN_LEAGUE+'/nfl.png'},{id:'nhl',name:'NHL',sport:'Hockey',logo:ESPN_LEAGUE+'/nhl.png'},{id:'ufc',name:'UFC',sport:'MMA / UFC',logo:'https://a.espncdn.com/i/teamlogos/mma/500/ufc.png'},{id:'f1',name:'Formula 1',sport:'Formula 1',logo:'https://a.espncdn.com/i/teamlogos/leagues/500/f1.png'},{id:'ipl',name:'IPL',sport:'Cricket',logo:'https://a.espncdn.com/i/leaguelogos/cricket/500/1.png'},{id:'cs2',name:'CS2 Major',sport:'Esports',logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Counter-Strike_2_logo.svg/200px-Counter-Strike_2_logo.svg.png'},{id:'lol',name:'LoL Worlds',sport:'Esports',logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/League_of_Legends_2019_vector.svg/200px-League_of_Legends_2019_vector.svg.png'},{id:'mlbb',name:'MPL / MLBB',sport:'Esports',logo:''},{id:'cod',name:'Call of Duty League',sport:'Esports',logo:''},{id:'efoot',name:'eFootball League',sport:'e-Football',logo:API_SPORTS+'/39.png'},{id:'ebask',name:'eNBA',sport:'e-Basketball',logo:ESPN_LEAGUE+'/nba.png'},{id:'ecric',name:'eCricket Cup',sport:'e-Cricket',logo:''},{id:'ascot',name:'Ascot',sport:'Horse Racing',logo:''},{id:'melbourne',name:'Melbourne Cup',sport:'Horse Racing',logo:''}
+  ];
+
+  const matches=[
+    {id:'arsenal',home:'Arsenal',away:'Brighton',homeLogo:CREST+'/57.png',awayLogo:CREST+'/397.png',entityType:'club',league:'Premier League',sport:'Sepak bola',live:true,finished:false,clock:"67′",score:'2 : 1',odds:[1.72,3.85,4.6],move:['up',null,'down'],players:[]},
+    {id:'madrid',home:'Real Madrid',away:'Sevilla',homeLogo:CREST+'/86.png',awayLogo:CREST+'/559.png',entityType:'club',league:'LaLiga',sport:'Sepak bola',live:true,finished:false,clock:"34′",score:'0 : 0',odds:[1.48,4.2,6.5],move:[null,'up',null],players:[]},
+    {id:'paris',home:'Paris SG',away:'Liverpool',homeLogo:CREST+'/524.png',awayLogo:CREST+'/64.png',entityType:'club',league:'Champions League',sport:'Sepak bola',live:false,finished:false,clock:'22:00',score:'– : –',odds:[2.4,3.5,2.85],move:[null,null,null],players:[],dayOffset:0},
+    {id:'inter',home:'Inter',away:'Napoli',homeLogo:CREST+'/108.png',awayLogo:CREST+'/113.png',entityType:'club',league:'Serie A',sport:'Sepak bola',live:false,finished:true,clock:'FT',score:'2 : 1',odds:[2.1,3.3,3.65],move:[null,null,null],players:[],stats:{possession:[58,42],shots:[14,9],shotsOn:[6,3],corners:[7,4],fouls:[11,13],yellow:[2,3],red:[0,0]}},
+    {id:'nba1',home:'Lakers',away:'Celtics',homeLogo:ESPN+'/nba/500/lal.png',awayLogo:ESPN+'/nba/500/bos.png',entityType:'club',league:'NBA',sport:'Basket',live:true,finished:false,clock:'Q3 · 04:22',score:'88 : 91',odds:[1.95,15,1.90],move:['down',null,'up'],players:[]},
+    {id:'nba2',home:'Warriors',away:'Nets',homeLogo:ESPN+'/nba/500/gs.png',awayLogo:ESPN+'/nba/500/bkn.png',entityType:'club',league:'NBA',sport:'Basket',live:false,finished:false,clock:'08:30',score:'– : –',odds:[1.70,14,2.20],move:[null,null,null],players:[],dayOffset:0},
+    {id:'ten1',home:'Alcaraz',away:'Sinner',homeLogo:ATH.alcaraz,awayLogo:ATH.sinner,entityType:'athlete',league:'ATP Masters',sport:'Tenis',live:true,finished:false,clock:'Set 2',score:'6-4 · 3-3',odds:[1.85,8,2.05],move:['up',null,'down'],players:[]},
+    {id:'ten2',home:'Swiatek',away:'Gauff',homeLogo:ATH.swiatek,awayLogo:ATH.gauff,entityType:'athlete',league:'Wimbledon',sport:'Tenis',live:false,finished:false,clock:'15:00',score:'– : –',odds:[1.55,10,2.45],move:[null,null,null],players:[],dayOffset:1},
+    {id:'mlb1',home:'Yankees',away:'Red Sox',homeLogo:ESPN+'/mlb/500/nyy.png',awayLogo:ESPN+'/mlb/500/bos.png',entityType:'club',league:'MLB',sport:'Baseball',live:true,finished:false,clock:'Inning 6',score:'4 : 3',odds:[1.80,9,2.15],move:[null,null,'up'],players:[]},
+    {id:'mlb2',home:'Dodgers',away:'Giants',homeLogo:ESPN+'/mlb/500/lad.png',awayLogo:ESPN+'/mlb/500/sf.png',entityType:'club',league:'MLB',sport:'Baseball',live:false,finished:false,clock:'10:10',score:'– : –',odds:[1.65,9.5,2.30],move:[null,null,null],players:[],dayOffset:2},
+    {id:'nfl1',home:'Chiefs',away:'Bills',homeLogo:ESPN+'/nfl/500/kc.png',awayLogo:ESPN+'/nfl/500/buf.png',entityType:'club',league:'NFL',sport:'American Football',live:true,finished:false,clock:'Q2 · 08:14',score:'14 : 10',odds:[1.90,12,2.00],move:['up',null,'down'],players:[]},
+    {id:'nfl2',home:'49ers',away:'Cowboys',homeLogo:ESPN+'/nfl/500/sf.png',awayLogo:ESPN+'/nfl/500/dal.png',entityType:'club',league:'NFL',sport:'American Football',live:false,finished:false,clock:'03:25',score:'– : –',odds:[1.75,11,2.15],move:[null,null,null],players:[],dayOffset:1},
+    {id:'nhl1',home:'Maple Leafs',away:'Canadiens',homeLogo:ESPN+'/nhl/500/tor.png',awayLogo:ESPN+'/nhl/500/mtl.png',entityType:'club',league:'NHL',sport:'Hockey',live:true,finished:false,clock:'P2 · 12:01',score:'2 : 1',odds:[1.88,4.2,3.40],move:[null,'up',null],players:[]},
+    {id:'nhl2',home:'Rangers',away:'Bruins',homeLogo:ESPN+'/nhl/500/nyr.png',awayLogo:ESPN+'/nhl/500/bos.png',entityType:'club',league:'NHL',sport:'Hockey',live:false,finished:false,clock:'01:00',score:'– : –',odds:[2.10,3.9,3.10],move:[null,null,null],players:[],dayOffset:3},
+    {id:'ufc1',home:'Jones',away:'Miocic',homeLogo:ATH.jones,awayLogo:ATH.miocic,entityType:'athlete',league:'UFC',sport:'MMA / UFC',live:true,finished:false,clock:'R2',score:'—',odds:[1.45,20,2.80],move:['down',null,'up'],players:[]},
+    {id:'ufc2',home:'Adesanya',away:'Du Plessis',homeLogo:ATH.adesanya,awayLogo:ATH.duplessis,entityType:'athlete',league:'UFC',sport:'MMA / UFC',live:false,finished:false,clock:'07:00',score:'– : –',odds:[2.20,18,1.75],move:[null,null,null],players:[],dayOffset:4},
+    {id:'f11',home:'Verstappen',away:'Norris',homeLogo:ATH.verstappen,awayLogo:ATH.norris,entityType:'athlete',league:'Formula 1',sport:'Formula 1',live:true,finished:false,clock:'Lap 34/57',score:'P1 · P2',odds:[1.35,25,4.50],move:[null,null,'up'],players:[]},
+    {id:'f12',home:'Hamilton',away:'Leclerc',homeLogo:ATH.hamilton,awayLogo:ATH.leclerc,entityType:'athlete',league:'Formula 1',sport:'Formula 1',live:false,finished:false,clock:'Race · 14:00',score:'– : –',odds:[2.80,20,1.90],move:[null,null,null],players:[],dayOffset:5},
+    {id:'ipl1',home:'Mumbai Indians',away:'CSK',homeLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/c/cd/Mumbai_Indians_logo.svg/200px-Mumbai_Indians_logo.svg.png',awayLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/Chennai_Super_Kings_Logo.svg/200px-Chennai_Super_Kings_Logo.svg.png',entityType:'club',league:'IPL',sport:'Cricket',live:true,finished:false,clock:'Overs 14.2',score:'128/3',odds:[1.70,11,2.25],move:['up',null,null],players:[]},
+    {id:'ipl2',home:'RCB',away:'KKR',homeLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/Royal_Challengers_Bangalore_2020.svg/200px-Royal_Challengers_Bangalore_2020.svg.png',awayLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Kolkata_Knight_Riders_Logo.svg/200px-Kolkata_Knight_Riders_Logo.svg.png',entityType:'club',league:'IPL',sport:'Cricket',live:false,finished:false,clock:'19:30',score:'– : –',odds:[1.95,10,1.95],move:[null,null,null],players:[],dayOffset:0},
+    {id:'cs1',home:'NaVi',away:'FaZe',homeLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/a/a8/Natus_Vincere_logo.svg/200px-Natus_Vincere_logo.svg.png',awayLogo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/FaZe_Clan_logo.svg/200px-FaZe_Clan_logo.svg.png',entityType:'club',league:'CS2 Major',sport:'Esports',live:true,finished:false,clock:'Map 2',score:'12 : 10',odds:[1.80,12,2.10],move:[null,null,'up'],players:[]},
+    {id:'lol1',home:'T1',away:'Gen.G',homeLogo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/T1_logo.svg/200px-T1_logo.svg.png',awayLogo:'https://upload.wikimedia.org/wikipedia/en/thumb/7/7e/Gen.G_logo.svg/200px-Gen.G_logo.svg.png',entityType:'club',league:'LoL Worlds',sport:'Esports',live:false,finished:false,clock:'16:00',score:'– : –',odds:[1.85,11,2.05],move:[null,null,null],players:[],dayOffset:2},
+    {id:'mlbb1',home:'RRQ',away:'ONIC',homeLogo:'',awayLogo:'',entityType:'club',league:'MPL / MLBB',sport:'Esports',live:true,finished:false,clock:'Game 2',score:'1 : 0',odds:[1.75,12,2.15],move:['up',null,'down'],players:[]},
+    {id:'mlbb2',home:'EVOS',away:'Geek Fam',homeLogo:'',awayLogo:'',entityType:'club',league:'MPL / MLBB',sport:'Esports',live:false,finished:false,clock:'18:00',score:'– : –',odds:[1.90,11,1.95],move:[null,null,null],players:[],dayOffset:1},
+    {id:'cod1',home:'OpTic Texas',away:'Atlanta FaZe',homeLogo:'',awayLogo:'',entityType:'club',league:'Call of Duty League',sport:'Esports',live:true,finished:false,clock:'Map 3',score:'1 : 1',odds:[1.85,10,2.00],move:[null,null,'up'],players:[]},
+    {id:'cod2',home:'LA Thieves',away:'NY Subliners',homeLogo:'',awayLogo:'',entityType:'club',league:'Call of Duty League',sport:'Esports',live:false,finished:false,clock:'21:00',score:'– : –',odds:[1.70,11,2.25],move:[null,null,null],players:[],dayOffset:2},
+    {id:'efoot1',home:'e-Arsenal',away:'e-Chelsea',homeLogo:CREST+'/57.png',awayLogo:CREST+'/61.png',entityType:'club',league:'eFootball League',sport:'e-Football',live:true,finished:false,clock:"55′",score:'1 : 1',odds:[1.90,3.40,3.80],move:[null,'up',null],players:[]},
+    {id:'efoot2',home:'e-Barca',away:'e-Bayern',homeLogo:CREST+'/81.png',awayLogo:CREST+'/5.png',entityType:'club',league:'eFootball League',sport:'e-Football',live:false,finished:false,clock:'20:30',score:'– : –',odds:[2.10,3.50,3.20],move:[null,null,null],players:[],dayOffset:0},
+    {id:'ebask1',home:'e-Lakers',away:'e-Warriors',homeLogo:ESPN+'/nba/500/lal.png',awayLogo:ESPN+'/nba/500/gs.png',entityType:'club',league:'eNBA',sport:'e-Basketball',live:false,finished:false,clock:'09:00',score:'– : –',odds:[1.80,14,2.05],move:[null,null,null],players:[],dayOffset:1},
+    {id:'ecric1',home:'e-MI',away:'e-CSK',homeLogo:'',awayLogo:'',entityType:'club',league:'eCricket Cup',sport:'e-Cricket',live:true,finished:false,clock:'Overs 8.1',score:'72/2',odds:[1.85,10,2.05],move:['up',null,null],players:[]},
+    {id:'vol1',home:'Brazil',away:'Poland',homeLogo:FLAG+'/br.png',awayLogo:FLAG+'/pl.png',entityType:'nation',league:'VNL',sport:'Voli',live:true,finished:false,clock:'Set 3',score:'1 : 1',odds:[1.90,8,2.00],move:[null,null,null],players:[]},
+    {id:'vol2',home:'Italy',away:'USA',homeLogo:FLAG+'/it.png',awayLogo:FLAG+'/us.png',entityType:'nation',league:'VNL',sport:'Voli',live:false,finished:false,clock:'20:00',score:'– : –',odds:[1.75,9,2.20],move:[null,null,null],players:[],dayOffset:1},
+    {id:'golf1',home:'Scheffler',away:'McIlroy',homeLogo:ATH.scheffler,awayLogo:ATH.mcilroy,entityType:'athlete',league:'PGA Tour',sport:'Golf',live:true,finished:false,clock:'Rd 3 · H12',score:'-8 · -6',odds:[1.60,15,2.40],move:['up',null,'down'],players:[]},
+    {id:'golf2',home:'Rahm',away:'Schauffele',homeLogo:ATH.rahm,awayLogo:ATH.schauffele,entityType:'athlete',league:'PGA Tour',sport:'Golf',live:false,finished:false,clock:'Tee · 07:00',score:'– : –',odds:[1.95,14,1.95],move:[null,null,null],players:[],dayOffset:6},
+    {id:'rug1',home:'All Blacks',away:'Springboks',homeLogo:FLAG+'/nz.png',awayLogo:FLAG+'/za.png',entityType:'nation',league:'Rugby Championship',sport:'Rugby',live:true,finished:false,clock:"62′",score:'18 : 15',odds:[1.85,20,2.10],move:[null,null,'up'],players:[]},
+    {id:'rug2',home:'England',away:'France',homeLogo:FLAG+'/gb-eng.png',awayLogo:FLAG+'/fr.png',entityType:'nation',league:'Six Nations',sport:'Rugby',live:false,finished:false,clock:'17:45',score:'– : –',odds:[2.20,18,1.80],move:[null,null,null],players:[],dayOffset:3},
+    {id:'horse1',home:'Thunder Bay',away:'Night Runner',homeLogo:'',awayLogo:'',entityType:'athlete',league:'Ascot',sport:'Horse Racing',live:true,finished:false,clock:'Race 4 · 1200m',score:'Running',odds:[2.40,3.10,4.50],move:['up',null,'down'],players:[]},
+    {id:'horse2',home:'Golden Mane',away:'Silver Dart',homeLogo:'',awayLogo:'',entityType:'athlete',league:'Melbourne Cup',sport:'Horse Racing',live:false,finished:false,clock:'15:40',score:'– : –',odds:[3.20,4.00,5.50],move:[null,null,null],players:[],dayOffset:1},
+    {id:'horse3',home:'Storm King',away:'River Flash',homeLogo:'',awayLogo:'',entityType:'athlete',league:'Ascot',sport:'Horse Racing',live:false,finished:false,clock:'16:15',score:'– : –',odds:[2.10,3.60,6.00],move:[null,null,null],players:[],dayOffset:0}
+  ];
+
+  const bookingCodes={'HB-DEMO1':[{matchId:'arsenal',labelIdx:0},{matchId:'madrid',labelIdx:1}],'HB-DEMO2':[{matchId:'paris',labelIdx:0}]};
+  let wallets={USDT:{id:'USDT',name:'Tether',type:'crypto',balance:1000,decimals:2,icon:'₮',logo:ICON_CDN+'usdt.svg'},BTC:{id:'BTC',name:'Bitcoin',type:'crypto',balance:0.0523,decimals:6,icon:'₿',logo:ICON_CDN+'btc.svg'},ETH:{id:'ETH',name:'Ethereum',type:'crypto',balance:0.84,decimals:4,icon:'Ξ',logo:ICON_CDN+'eth.svg'},USD:{id:'USD',name:'US Dollar',type:'cash',balance:500,decimals:2,icon:'$',logo:ICON_CDN+'usd.svg'},IDR:{id:'IDR',name:'Rupiah',type:'cash',balance:15000000,decimals:0,icon:'Rp',logo:''},EUR:{id:'EUR',name:'Euro',type:'cash',balance:420,decimals:2,icon:'€',logo:ICON_CDN+'eur.svg'}};
+  let selectedCurrency=localStorage.getItem('hb-currency')||'USDT',slipWalletOpen=false,mainWalletOpen=false,oddsBook={},selections=[],savedBookings=JSON.parse(localStorage.getItem('hb-bookings')||'{}');
+  let currentSport='Semua',currentTab='slip',message=null,copyMessage=null,currentMatchId=null,myBetsFilter='all',historyFilter='today',customDateApplied=null,currentView='home',previousView='home',slipReturnView='home';
+  let returnToMyBets=false,returnComboId=null,returnToBetDetailId=null,activeBetDetailId=null,betMode='single',oddsAcceptMode=localStorage.getItem('hb-odds-accept')||'any',oddsSettingsOpen=false,lastBookingCode=null,comboStake='10';
+  let copyTimer=null,placeSuccess=false,placeSuccessTimer=null,placeSuccessFlow=false,expandedCombos={},upcomingSport='Semua',upcomingDateKey=null,calViewYear=null,calViewMonth=null;
+  let sportsCat='sports',sportsSub='top',selectedSportId=null,selectedSportLabel=null,selectedTournament=null,sportsSheetMode=null,openCountryDropdowns={},liveSport='Top',homeLiveExpanded=false,homeUpcomingExpanded=false;
+  let searchHistory=JSON.parse(localStorage.getItem('hb-search-history')||'[]');
+  let favorites=JSON.parse(localStorage.getItem('hb-favorites')||'[]');
+  const SEARCH_HOT=['Arsenal','Premier League','NBA','Lakers','Champions League','Alcaraz','CS2','Real Madrid','UFC','Formula 1'],SEARCH_BEST=['Premier League','LaLiga','NBA','ATP Masters','CS2 Major','UFC'];
+  const now=new Date();
+  function daysAgo(n){const d=new Date(now);d.setDate(d.getDate()-n);return d.toISOString();}
+  function pad2(n){return n<10?'0'+n:''+n;}
+  function toDateKey(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+  function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+  function addDays(d,n){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()+n);return x;}
+  function endOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate(),23,59,59,999);}
+  let bets=[
+    {id:'b1',matchId:'arsenal',match:'Arsenal v Brighton',label:'Arsenal',odds:1.72,stake:25,status:'open',returnValue:0,placedAt:daysAgo(0),sport:'Sepak bola',league:'Premier League',betType:'Single',legs:null},
+    {id:'b2',matchId:'madrid',match:'Real Madrid v Sevilla',label:'Seri',odds:4.20,stake:10,status:'won',returnValue:42,placedAt:daysAgo(0),sport:'Sepak bola',league:'LaLiga',betType:'Single',legs:null},
+    {id:'b3',matchId:'inter',match:'Inter v Napoli',label:'Inter',odds:2.10,stake:20,status:'lost',returnValue:0,placedAt:daysAgo(2),sport:'Sepak bola',league:'Serie A',betType:'Single',legs:null},
+    {id:'combo-demo1',matchId:'arsenal',match:'2 selections',label:'Combo ×2 (+3%)',odds:7.22,stake:15,status:'open',returnValue:0,placedAt:daysAgo(0),sport:'Sepak bola',league:'Premier League · LaLiga',betType:'Combo',legs:[{matchId:'arsenal',match:'Arsenal v Brighton',label:'Arsenal',odds:1.72,result:null},{matchId:'madrid',match:'Real Madrid v Sevilla',label:'Seri',odds:4.20,result:null}]}
+  ];
+
+  function comboBonusPercent(n){if(n<2)return 0;if(n===2)return 3;if(n===3)return 5;if(n===4)return 8;if(n===5)return 12;if(n===6)return 16;if(n===7)return 20;if(n===8)return 25;if(n===9)return 30;return Math.min(35+(n-10)*3,50);}
+  function getWallet(){return wallets[selectedCurrency]||wallets.USDT;}
+  function getBalance(){return getWallet().balance;}
+  function setBalance(val){getWallet().balance=val;}
+  function fmtCurrency(n,cur){const w=wallets[cur]||getWallet();return Number(n).toLocaleString('id-ID',{minimumFractionDigits:w.decimals,maximumFractionDigits:w.decimals});}
+  function fmt(n){return fmtCurrency(n,selectedCurrency);}
+  function currencyLabel(){return getWallet().id;}
+  function isStakeBelowMin(v){const n=Number(v);return v===''||v==null||isNaN(n)||n<MIN_STAKE;}
+  function openBetsCount(){return bets.filter(function(b){return b.status==='open';}).length;}
+  function getMatchById(id){if(!id)return null;return matches.find(function(m){return m.id===id;})||null;}
+  function formatMatchScoreText(m){if(!m)return'';var sc=String(m.score||'').replace(/\s*:\s*/g,'-');if(m.finished)return{kind:'ft',label:'FT',score:sc};if(m.live)return{kind:'live',label:'LIVE',score:sc};return null;}
+  function scoreNoteHTML(m){var info=formatMatchScoreText(m);if(!info)return'';return'<div class="sel-score-note '+info.kind+'"><span>'+info.label+'</span><span class="sc-val">'+info.score+'</span></div>';}
+  function sportArtHTML(sport){return'<span class="sport-art">'+(SPORT_ICON[sport]||'🏅')+'</span>';}
+  function compVisualHTML(c){if(c.logo)return'<img src="'+c.logo+'" alt="'+c.name+'" loading="lazy" onerror="this.onerror=null;this.style.display=\'none\';if(!this.parentNode.querySelector(\'.sport-art\')){this.parentNode.insertAdjacentHTML(\'beforeend\',\'<span class=sport-art>'+(SPORT_ICON[c.sport]||'🏅')+'</span>\');}">';return sportArtHTML(c.sport);}
+  function logoHTML(w){const fb=w.icon||w.id.charAt(0);if(w.logo)return'<span class="w-logo"><img src="'+w.logo+'" alt="" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<span class=fallback>'+fb+'</span>\'"></span>';return'<span class="w-logo"><span class="fallback">'+fb+'</span></span>';}
+  function walletItemHTML(w){const active=w.id===selectedCurrency;return'<button type="button" class="wallet-item'+(active?' active':'')+'" onclick="selectCurrency(\''+w.id+'\')">'+logoHTML(w)+'<span class="w-info"><b>'+w.id+'</b><small>'+w.name+'</small></span><span class="w-amount">'+fmtCurrency(w.balance,w.id)+'</span><span class="w-check">'+(active?'✓':'')+'</span></button>';}
+  function walletColsHTML(){const crypto=Object.values(wallets).filter(function(w){return w.type==='crypto';}),cash=Object.values(wallets).filter(function(w){return w.type==='cash';});return'<div class="wallet-cols"><div class="wallet-col"><div class="wallet-col-title">Crypto</div>'+crypto.map(walletItemHTML).join('')+'</div><div class="wallet-col"><div class="wallet-col-title">Cash</div>'+cash.map(walletItemHTML).join('')+'</div></div>';}
+  function syncBetMode(){betMode=selections.length>=2?'combo':'single';}
+  function toggleTheme(){const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);localStorage.setItem('hb-theme',next);updateThemeIcon(next);}
+  function updateThemeIcon(theme){document.getElementById('theme-icon-moon').style.display=theme==='dark'?'none':'block';document.getElementById('theme-icon-sun').style.display=theme==='dark'?'block':'none';}
+  function updateBalanceUI(){const w=getWallet(),el=document.getElementById('balance-display');if(el)el.innerHTML=fmt(w.balance)+' <small>'+w.id+' DEMO</small>';const sb=document.getElementById('slip-wallet-bal'),ss=document.getElementById('slip-wallet-sym');if(sb)sb.textContent=fmt(w.balance);if(ss)ss.textContent=w.id;renderSlipWalletContent();if(mainWalletOpen)renderMainWallet();}
+  function openMainWallet(ev){if(ev)ev.stopPropagation();mainWalletOpen=true;document.getElementById('wallet-float-overlay').classList.add('open');renderMainWallet();}
+  function closeMainWallet(ev){if(ev&&ev.target&&ev.target.id!=='wallet-float-overlay'&&!ev.target.classList.contains('wallet-float-close')&&ev.target.closest&&ev.target.closest('.wallet-float'))return;mainWalletOpen=false;document.getElementById('wallet-float-overlay').classList.remove('open');}
+  function renderMainWallet(){const w=getWallet(),active=document.getElementById('wallet-float-active'),body=document.getElementById('wallet-float-body');if(active)active.innerHTML=logoHTML(w)+'<div class="wa-info"><small>SALDO AKTIF</small><b>'+fmt(w.balance)+' '+w.id+'</b></div>';if(body)body.innerHTML=walletColsHTML();}
+  function selectCurrency(id){if(!wallets[id])return;selectedCurrency=id;localStorage.setItem('hb-currency',id);updateBalanceUI();updateSlip();if(mainWalletOpen)renderMainWallet();}
+  function toggleSlipWallet(ev){if(ev)ev.stopPropagation();slipWalletOpen=!slipWalletOpen;document.getElementById('slip-wallet-overlay').classList.toggle('open',slipWalletOpen);if(slipWalletOpen)renderSlipWalletContent();}
+  function closeSlipWallet(ev){if(ev&&ev.target&&ev.target.id!=='slip-wallet-overlay'&&!ev.target.classList.contains('wallet-float-close'))return;slipWalletOpen=false;document.getElementById('slip-wallet-overlay').classList.remove('open');}
+  function renderSlipWalletContent(){const w=getWallet(),active=document.getElementById('slip-wallet-active'),body=document.getElementById('slip-wallet-body');if(active)active.innerHTML=logoHTML(w)+'<div class="wa-info"><small>SALDO AKTIF</small><b>'+fmt(w.balance)+' '+w.id+'</b></div>';if(body)body.innerHTML=walletColsHTML();}
+  function registerOdds(key,odds,suspended){oddsBook[key]={odds:Number(odds),suspended:!!suspended};}
+  function currentOdds(key){return oddsBook[key]||{odds:null,suspended:true};}
+  function compLogo(name){const c=competitions.find(x=>x.name===name);return(c&&c.logo)?c.logo:'';}
+  function isPhotoEntity(entityType){return entityType==='athlete';}
+  function teamLogoHTML(url,name,entityType){const letter=(name||'?').charAt(0),photoCls=isPhotoEntity(entityType)?' photo':'';if(url)return'<span class="team-logo'+photoCls+'"><img src="'+url+'" alt="'+(name||'')+'" loading="lazy" onerror="this.parentNode.textContent=\''+letter.replace(/'/g,'')+'\';this.parentNode.className=\'team-mark\';"></span>';return'<span class="team-mark">'+letter+'</span>';}
+  function crestHTML(url,name,away,entityType){const letter=(name||'?').charAt(0),photoCls=isPhotoEntity(entityType)?' photo':'',cls='crest'+(away?' away':'')+photoCls;if(url)return'<span class="'+cls+'"><img src="'+url+'" alt="'+(name||'')+'" loading="lazy" onerror="this.parentNode.textContent=\''+letter.replace(/'/g,'')+'\';this.parentNode.className=\''+cls+' fallback\';"></span>';return'<span class="'+cls+' fallback">'+letter+'</span>';}
+  function formatBetDate(iso){if(!iso)return'';return new Date(iso).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+  function ensureMatchDates(){const base=startOfDay(new Date());let auto=0;matches.forEach(function(m){if(m.live||m.finished)return;if(m.dateKey)return;var off=(typeof m.dayOffset==='number')?m.dayOffset:(auto++%10);m.dateKey=toDateKey(addDays(base,off));});}
+  function isFavorite(id){return favorites.indexOf(id)>=0;}
+  function toggleFavorite(id,ev){if(ev)ev.stopPropagation();var i=favorites.indexOf(id);if(i>=0)favorites.splice(i,1);else favorites.unshift(id);try{localStorage.setItem('hb-favorites',JSON.stringify(favorites));}catch(e){}refreshLists();if(currentView==='favorite')renderFavorite();}
+  function favBtnHTML(id){return'<button type="button" class="fav-star-btn'+(isFavorite(id)?' on':'')+'" onclick="toggleFavorite(\''+id+'\',event)">'+(isFavorite(id)?'♥':'♡')+'</button>';}
+
+  function openSearchOverlay(){document.getElementById('search-overlay').classList.add('open');var input=document.getElementById('search-overlay-input');if(input){input.value='';setTimeout(function(){input.focus();},80);}document.getElementById('search-clear-btn').classList.remove('visible');renderSearchBody('');}
+  function closeSearchOverlay(){document.getElementById('search-overlay').classList.remove('open');}
+  function clearSearchInput(){var input=document.getElementById('search-overlay-input');if(input){input.value='';input.focus();}document.getElementById('search-clear-btn').classList.remove('visible');renderSearchBody('');}
+  function pushSearchHistory(term){term=(term||'').trim();if(!term||term.length<2)return;searchHistory=searchHistory.filter(function(t){return t.toLowerCase()!==term.toLowerCase();});searchHistory.unshift(term);if(searchHistory.length>12)searchHistory=searchHistory.slice(0,12);try{localStorage.setItem('hb-search-history',JSON.stringify(searchHistory));}catch(e){}}
+  function applySearchChip(term){var input=document.getElementById('search-overlay-input');if(input){input.value=term;document.getElementById('search-clear-btn').classList.add('visible');}pushSearchHistory(term);renderSearchBody(term);}
+  function onSearchResultClick(matchId){var input=document.getElementById('search-overlay-input');var q=(input&&input.value||'').trim();if(q)pushSearchHistory(q);closeSearchOverlay();if(matchId)openMatch(matchId);}
+  function onSearchCompClick(compName,sport){pushSearchHistory(compName);closeSearchOverlay();sportsCat=getSportCategoryFromSport(sport);sportsSub='top';selectedSportId=null;selectedSportLabel=null;selectedTournament=null;showView('football');}
+  function renderSearchBody(q){q=(q||'').trim().toLowerCase();var body=document.getElementById('search-overlay-body');if(!body)return;var html='';if(!q){html+='<div class="search-section"><div class="search-section-title">Penelusuran sering</div><div class="search-chips">';var freq=searchHistory.length?searchHistory.slice(0,8):SEARCH_HOT.slice(0,6);freq.forEach(function(t){html+='<button type="button" class="search-chip" onclick="applySearchChip(\''+String(t).replace(/'/g,"\\'")+'\')"><span class="chip-ico">⏱</span>'+t+'</button>';});html+='</div></div>';html+='<div class="search-section"><div class="search-section-title">Penelusuran terbaik</div><div class="search-chips">';SEARCH_BEST.forEach(function(t){html+='<button type="button" class="search-chip hot" onclick="applySearchChip(\''+String(t).replace(/'/g,"\\'")+'\')"><span class="chip-ico">✦</span>'+t+'</button>';});html+='</div></div>';var liveQuick=matches.filter(function(m){return m.live&&!m.finished;}).slice(0,4);if(liveQuick.length){html+='<div class="search-section"><div class="search-section-title">Live sekarang</div><div class="search-result-list">';liveQuick.forEach(function(m){html+=searchResultItemHTML(m);});html+='</div></div>';}}else{var matchHits=matches.filter(function(m){return(m.home+' '+m.away+' '+m.league+' '+m.sport).toLowerCase().indexOf(q)>=0;});var compHits=competitions.filter(function(c){return(c.name+' '+c.sport).toLowerCase().indexOf(q)>=0;});if(!matchHits.length&&!compHits.length)html+='<div class="search-empty"><h3>Tidak ditemukan</h3><p>Coba kata kunci lain.</p></div>';else{if(compHits.length){html+='<div class="search-section"><div class="search-section-title">Kompetisi</div><div class="search-result-list">';compHits.slice(0,6).forEach(function(c){html+='<button type="button" class="search-result-item" onclick="onSearchCompClick(\''+c.name.replace(/'/g,"\\'")+'\',\''+c.sport.replace(/'/g,"\\'")+'\')"><span class="sr-logos"><span class="team-logo" style="width:36px;height:36px">'+(c.logo?'<img src="'+c.logo+'" alt="" onerror="this.parentNode.innerHTML=\'🏅\'">':'🏅')+'</span></span><span class="sr-info"><b>'+c.name+'</b><small>'+c.sport+'</small></span><span class="sr-arrow">→</span></button>';});html+='</div></div>';}if(matchHits.length){html+='<div class="search-section"><div class="search-section-title">Pertandingan · '+matchHits.length+'</div><div class="search-result-list">';matchHits.slice(0,20).forEach(function(m){html+=searchResultItemHTML(m);});html+='</div></div>';}}}body.innerHTML=html;}
+  function searchResultItemHTML(m){var status=m.finished?'FT':(m.live?'LIVE':m.clock),statusCls=m.live?'live-tag':'';return'<button type="button" class="search-result-item" onclick="onSearchResultClick(\''+m.id+'\')"><span class="sr-logos">'+teamLogoHTML(m.homeLogo,m.home,m.entityType)+'</span><span class="sr-info"><b>'+m.home+' v '+m.away+'</b><small>'+m.league+' · '+m.sport+'</small></span><span class="sr-meta"><span class="'+statusCls+'">'+status+'</span><br>'+m.score+'</span><span class="sr-arrow">→</span></button>';}
+
+  function getUpcomingDateRange(){const today=startOfDay(new Date()),list=[];for(let i=-7;i<=14;i++)list.push(addDays(today,i));return list;}
+  function setUpcomingSport(sport){upcomingSport=sport;renderUpcoming();}
+  function setUpcomingDate(dateKey){upcomingDateKey=dateKey;const parts=dateKey.split('-');calViewYear=parseInt(parts[0],10);calViewMonth=parseInt(parts[1],10)-1;renderUpcoming();}
+  function openUpcomingCalendar(){if(calViewYear==null){const t=new Date();calViewYear=t.getFullYear();calViewMonth=t.getMonth();}document.getElementById('cal-overlay').classList.add('open');renderCalendarGrid();}
+  function closeUpcomingCalendar(ev){if(ev&&ev.target&&ev.target.id!=='cal-overlay'&&!ev.target.classList.contains('cal-close-x'))return;document.getElementById('cal-overlay').classList.remove('open');}
+  function shiftCalMonth(delta){calViewMonth+=delta;if(calViewMonth<0){calViewMonth=11;calViewYear--;}if(calViewMonth>11){calViewMonth=0;calViewYear++;}renderCalendarGrid();}
+  function getCalBounds(){const today=startOfDay(new Date());return{min:startOfDay(addDays(today,-31)),max:startOfDay(addDays(today,31))};}
+  function renderCalendarGrid(){const label=document.getElementById('cal-month-label'),grid=document.getElementById('cal-grid');if(!label||!grid)return;label.textContent=MONTH_FULL[calViewMonth]+' '+calViewYear;const bounds=getCalBounds(),first=new Date(calViewYear,calViewMonth,1),startWeekday=first.getDay(),daysInMonth=new Date(calViewYear,calViewMonth+1,0).getDate(),prevMonthDays=new Date(calViewYear,calViewMonth,0).getDate();const prevBtn=document.getElementById('cal-prev'),nextBtn=document.getElementById('cal-next'),viewMin=new Date(calViewYear,calViewMonth,1),viewMax=new Date(calViewYear,calViewMonth+1,0);if(prevBtn)prevBtn.disabled=viewMax<bounds.min;if(nextBtn)nextBtn.disabled=viewMin>bounds.max;const todayKey=toDateKey(startOfDay(new Date()));let html='';for(let i=0;i<startWeekday;i++){const dayNum=prevMonthDays-startWeekday+1+i,d=new Date(calViewYear,calViewMonth-1,dayNum),key=toDateKey(d),disabled=d<bounds.min||d>bounds.max;html+='<button type="button" class="cal-day out'+(disabled?' disabled':'')+'"'+(disabled?' disabled':' onclick="pickCalDate(\''+key+'\')"')+'>'+dayNum+'</button>';}for(let day=1;day<=daysInMonth;day++){const d=new Date(calViewYear,calViewMonth,day),key=toDateKey(d),disabled=d<bounds.min||d>bounds.max,cls=['cal-day'];if(key===todayKey)cls.push('today');if(key===upcomingDateKey)cls.push('selected');if(disabled)cls.push('disabled');html+='<button type="button" class="'+cls.join(' ')+'"'+(disabled?' disabled':' onclick="pickCalDate(\''+key+'\')"')+'>'+day+'</button>';}const totalCells=startWeekday+daysInMonth,remain=(7-(totalCells%7))%7;for(let i=1;i<=remain;i++){const d=new Date(calViewYear,calViewMonth+1,i),key=toDateKey(d),disabled=d<bounds.min||d>bounds.max;html+='<button type="button" class="cal-day out'+(disabled?' disabled':'')+'"'+(disabled?' disabled':' onclick="pickCalDate(\''+key+'\')"')+'>'+i+'</button>';}grid.innerHTML=html;}
+  function pickCalDate(key){upcomingDateKey=key;const parts=key.split('-');calViewYear=parseInt(parts[0],10);calViewMonth=parseInt(parts[1],10)-1;document.getElementById('cal-overlay').classList.remove('open');renderUpcoming();}
+  function renderUpcoming(){ensureMatchDates();if(!upcomingDateKey)upcomingDateKey=toDateKey(startOfDay(new Date()));const sportNav=document.getElementById('upcoming-sport-nav');if(sportNav)sportNav.innerHTML=SPORT_LIST.map(function(s){return'<button type="button" class="upcoming-sport-pill'+(s===upcomingSport?' selected':'')+'" onclick="setUpcomingSport(\''+s+'\')">'+sportIconHTML(s)+s+'</button>';}).join('');const datesEl=document.getElementById('upcoming-dates'),todayKey=toDateKey(startOfDay(new Date()));if(datesEl)datesEl.innerHTML=getUpcomingDateRange().map(function(d){const key=toDateKey(d),isToday=key===todayKey,labelDay=isToday?'TODAY':DAY_SHORT[d.getDay()],labelDate=d.getDate()+' '+MONTH_SHORT[d.getMonth()];return'<button type="button" class="upcoming-date-item'+(key===upcomingDateKey?' selected':'')+(isToday?' is-today':'')+'" onclick="setUpcomingDate(\''+key+'\')"><span class="d-day">'+labelDay+'</span><span class="d-date">'+labelDate+'</span></button>';}).join('');const list=matches.filter(function(m){if(m.live||m.finished)return false;if(upcomingSport!=='Semua'&&m.sport!==upcomingSport)return false;if(m.dateKey!==upcomingDateKey)return false;return true;});const box=document.getElementById('upcoming-matches'),cnt=document.getElementById('upcoming-count');if(cnt)cnt.textContent=String(list.length);if(box)box.innerHTML=list.length?'<div class="match-list">'+list.map(renderMatchRow).join('')+'</div>':'<div class="list-empty"><h3>Tidak ada jadwal.</h3><p>Coba tanggal atau olahraga lain.</p></div>';}
+  function getLiveSportPills(){var sports=SPORT_LIST.filter(function(s){return s!=='Semua';});return['Top','All'].concat(sports);}
+  function setLiveSport(sport){liveSport=sport;renderLive();}
+  function sortLiveByPriority(list){return list.slice().sort(function(a,b){var pa=LIVE_SPORT_PRIORITY.indexOf(a.sport),pb=LIVE_SPORT_PRIORITY.indexOf(b.sport);if(pa<0)pa=999;if(pb<0)pb=999;if(pa!==pb)return pa-pb;return 0;});}
+  function renderLive(){var sportNav=document.getElementById('live-sport-nav');if(sportNav){var pills=getLiveSportPills();sportNav.innerHTML=pills.map(function(s){var ico=s==='Top'?'🔥':(s==='All'?'🏆':(SPORT_ICON[s]||'🏅'));return'<button type="button" class="live-sport-pill'+(s===liveSport?' selected':'')+'" onclick="setLiveSport(\''+s.replace(/'/g,"\\'")+'\')"><span class="sp-ico-wrap">'+ico+'</span>'+s+'</button>';}).join('');}var list=matches.filter(function(m){return m.live&&!m.finished;});if(liveSport==='Top')list=sortLiveByPriority(list);else if(liveSport!=='All')list=list.filter(function(m){return m.sport===liveSport;});var cnt=document.getElementById('live-page-count');if(cnt)cnt.textContent=String(list.length);var box=document.getElementById('live-only'),fallback=document.getElementById('live-fallback');if(!box)return;if(list.length){box.innerHTML='<div class="match-list">'+list.map(renderMatchRow).join('')+'</div>';if(fallback)fallback.style.display='none';}else{box.innerHTML='<div class="list-empty"><h3>Tidak ada pertandingan live.</h3><p>Coba filter olahraga lain.</p></div>';if(fallback){fallback.style.display='block';var soon=matches.filter(function(m){return !m.live&&!m.finished;}).slice(0,8);fallback.innerHTML=soon.length?'<div class="section-title"><h2>Starting soon</h2></div><div class="match-list">'+soon.map(renderMatchRow).join('')+'</div>':'';}}}
+
+  function resetSportsDropdowns(){selectedSportId=null;selectedSportLabel=null;selectedTournament=null;openCountryDropdowns={};sportsCat='sports';var ds=document.getElementById('dd-sports-label'),de=document.getElementById('dd-esports-label'),dr=document.getElementById('dd-racing-label');if(ds)ds.textContent='⚽ Sports';if(de)de.textContent='🎮 E-Sports';if(dr)dr.textContent='🏇 Racing';document.getElementById('dd-sports-btn').classList.add('active');document.getElementById('dd-esports-btn').classList.remove('active');document.getElementById('dd-racing-btn').classList.remove('active');var tempWrap=document.getElementById('sports-temp-wrap');if(tempWrap)tempWrap.style.display='none';}
+  function openSportsSheet(cat){sportsSheetMode=cat;var title=cat==='sports'?'Sports':(cat==='esports'?'E-Sports':'Racing'),sub=cat==='sports'?'Pilih cabang olahraga atletik':(cat==='esports'?'Pilih game e-sports':'Pilih jenis racing');document.getElementById('sports-dd-sheet-title').textContent=title;document.getElementById('sports-dd-sheet-sub').textContent=sub;var body=document.getElementById('sports-dd-sheet-body'),items=cat==='sports'?SPORTS_DD_ITEMS:(cat==='esports'?ESPORTS_DD_ITEMS:RACING_DD_ITEMS);body.innerHTML=items.map(function(it){var sel=(sportsCat===cat&&selectedSportId===it.id)?' selected':'';var n=countTournamentsForDdItem(cat,it);return'<button type="button" class="sports-dd-item'+sel+'" onclick="selectSportsItem(\''+cat+'\',\''+it.id.replace(/'/g,"\\'")+'\',\''+it.label.replace(/'/g,"\\'")+'\',\''+it.icon+'\')"><span class="sp-ico-wrap lg">'+it.icon+'</span><span class="dd-label">'+it.label+'</span><span class="sports-dd-badge">'+n+'</span></button>';}).join('');document.getElementById('sports-dd-overlay').classList.add('open');}
+  function toggleCountryDropdown(countryKey,ev){if(ev)ev.stopPropagation();openCountryDropdowns[countryKey]=!openCountryDropdowns[countryKey];openTempSheet();}
+  function openTempSheet(){if(!selectedSportId)return;sportsSheetMode='temp';document.getElementById('sports-dd-sheet-title').textContent=selectedSportLabel||selectedSportId;document.getElementById('sports-dd-sheet-sub').textContent='Internasional · Negara · Turnamen';var key=resolveTournamentSportKey(),data=getTournamentData(key),html='';html+='<div class="sports-dd-section">Internasional</div>';html+='<button type="button" class="sports-temp-item'+(selectedTournament===null?' selected':'')+'" onclick="selectTournamentFilter(null)"><span class="ti-label">Semua turnamen</span><span class="sports-dd-badge">'+countMatchesForTournamentFilter(null)+'</span></button>';data.international.forEach(function(t){html+='<button type="button" class="sports-temp-item indent'+(selectedTournament===t?' selected':'')+'" onclick="selectTournamentFilter(\''+t.replace(/'/g,"\\'")+'\')"><span class="ti-label">'+t+'</span><span class="sports-dd-badge">'+countMatchesForTournamentFilter(t)+'</span></button>';});html+='<div class="sports-dd-divider"></div><div class="sports-dd-section">Negara · Top Turnamen</div>';data.topCountries.forEach(function(c){var cKey='top:'+c.country,isOpen=!!openCountryDropdowns[cKey],countryMatchCount=countMatchesForTournamentFilter(c.country);html+='<div class="sports-dd-country'+(isOpen?' open':'')+'"><button type="button" class="sports-dd-country-head" onclick="toggleCountryDropdown(\''+cKey.replace(/'/g,"\\'")+'\', event)"><span class="ti-label">'+flagHTML(c.country)+'<b>'+c.country+'</b></span><span class="sports-dd-badge">'+countryMatchCount+'</span><span class="co-chev">▼</span></button><div class="sports-dd-country-body"><button type="button" class="sports-temp-item indent'+(selectedTournament===c.country?' selected':'')+'" onclick="selectTournamentFilter(\''+c.country.replace(/'/g,"\\'")+'\')"><span class="ti-label">Semua di '+c.country+'</span><span class="sports-dd-badge">'+countryMatchCount+'</span></button>';c.tournaments.forEach(function(t){html+='<button type="button" class="sports-temp-item indent'+(selectedTournament===t?' selected':'')+'" onclick="selectTournamentFilter(\''+t.replace(/'/g,"\\'")+'\')"><span class="ti-label">'+t+'</span><span class="sports-dd-badge">'+countMatchesForTournamentFilter(t)+'</span></button>';});html+='</div></div>';});html+='<div class="sports-dd-divider"></div><div class="sports-dd-section">Negara A–Z</div>';data.allCountries.slice().sort().forEach(function(c){var cKey='az:'+c,isOpen=!!openCountryDropdowns[cKey],mc=countMatchesForTournamentFilter(c);html+='<div class="sports-dd-country'+(isOpen?' open':'')+'"><button type="button" class="sports-dd-country-head" onclick="toggleCountryDropdown(\''+cKey.replace(/'/g,"\\'")+'\', event)"><span class="ti-label">'+flagHTML(c)+c+'</span><span class="sports-dd-badge">'+mc+'</span><span class="co-chev">▼</span></button><div class="sports-dd-country-body"><button type="button" class="sports-temp-item indent'+(selectedTournament===c?' selected':'')+'" onclick="selectTournamentFilter(\''+c.replace(/'/g,"\\'")+'\')"><span class="ti-label">Filter: '+c+'</span><span class="sports-dd-badge">'+mc+'</span></button></div></div>';});document.getElementById('sports-dd-sheet-body').innerHTML=html;document.getElementById('sports-dd-overlay').classList.add('open');}
+  function closeSportsSheet(ev){if(ev&&ev.target&&ev.target.id!=='sports-dd-overlay'&&!ev.target.classList.contains('sports-dd-sheet-close'))return;document.getElementById('sports-dd-overlay').classList.remove('open');sportsSheetMode=null;}
+  function selectSportsItem(cat,itemId,label,icon){sportsCat=cat;selectedSportId=itemId;selectedSportLabel=label;selectedTournament=null;openCountryDropdowns={};if(cat==='sports'){document.getElementById('dd-sports-label').textContent=(icon||'⚽')+' '+label;document.getElementById('dd-esports-label').textContent='🎮 E-Sports';document.getElementById('dd-racing-label').textContent='🏇 Racing';}else if(cat==='esports'){document.getElementById('dd-esports-label').textContent=(icon||'🎮')+' '+label;document.getElementById('dd-sports-label').textContent='⚽ Sports';document.getElementById('dd-racing-label').textContent='🏇 Racing';}else{document.getElementById('dd-racing-label').textContent=(icon||'🏇')+' '+label;document.getElementById('dd-sports-label').textContent='⚽ Sports';document.getElementById('dd-esports-label').textContent='🎮 E-Sports';}document.getElementById('dd-sports-btn').classList.toggle('active',cat==='sports');document.getElementById('dd-esports-btn').classList.toggle('active',cat==='esports');document.getElementById('dd-racing-btn').classList.toggle('active',cat==='racing');var tempWrap=document.getElementById('sports-temp-wrap');if(tempWrap){tempWrap.style.display='block';document.getElementById('sports-temp-label').textContent=label;}document.getElementById('sports-dd-overlay').classList.remove('open');sportsSheetMode=null;if(sportsSub==='all')sportsSub='top';setTimeout(function(){openTempSheet();},200);renderFootball();}
+  function selectTournamentFilter(value){selectedTournament=value;document.getElementById('sports-dd-overlay').classList.remove('open');sportsSheetMode=null;renderFootball();}
+
+  function goBetNow(){sportsCat='sports';sportsSub='top';showView('football');}
+  function setBetMode(mode){if(mode==='combo'&&selections.length<2){message={type:'warn',text:'Combo butuh minimal 2 selection.'};updateSlip();return;}betMode=mode;lastBookingCode=null;copyMessage=null;placeSuccess=false;updateSlip();}
+  function setOddsAccept(mode){oddsAcceptMode=mode;localStorage.setItem('hb-odds-accept',mode);updateSlip();}
+  function toggleOddsSettings(){oddsSettingsOpen=!oddsSettingsOpen;updateSlip();}
+  function setStakeLive(id,value){var s=selections.find(function(x){return x.id===id;});if(!s)return;s.stake=value;var warn=document.querySelector('[data-minwarn="'+id+'"]');if(warn)warn.classList.toggle('hidden',!isStakeBelowMin(value));var ret=document.querySelector('[data-ret="'+id+'"]');if(ret){var o=s.oddsChanged?s.liveOdds:s.acceptedOdds;ret.textContent=fmt(Number(value||0)*Number(o||0))+' '+currencyLabel();}refreshPlaceBtnState();}
+  function setComboStakeLive(value){comboStake=value;var warn=document.querySelector('[data-minwarn="combo"]');if(warn)warn.classList.toggle('hidden',!isStakeBelowMin(value));refreshPlaceBtnState();}
+  function refreshPlaceBtnState(){var btn=document.getElementById('place-btn');if(!btn)return;var anySusp=selections.some(function(s){return s.suspended;}),anyChanged=selections.some(function(s){return s.oddsChanged;}),can=!anySusp&&!(oddsAcceptMode==='none'&&anyChanged);if(betMode==='combo'&&selections.length<2)can=false;if(betMode==='single'&&selections.some(function(s){return !s.suspended&&isStakeBelowMin(s.stake);}))can=false;if(betMode==='combo'&&isStakeBelowMin(comboStake))can=false;btn.disabled=!can;btn.textContent=can?(betMode==='combo'?'Place Combo':'Place '+selections.length+' single'):'Selesaikan dulu';}
+  function clearAllSelections(){selections=[];lastBookingCode=null;copyMessage=null;placeSuccess=false;syncBetMode();message=null;updateSlip();refreshLists();}
+  function generateBookingCode(){if(!selections.length)return;var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',code='HB-';for(var i=0;i<6;i++)code+=chars.charAt(Math.floor(Math.random()*chars.length));savedBookings[code]=selections.map(function(s){return{id:s.id,matchId:s.matchId||null,match:s.match,label:s.label,odds:Number(s.acceptedOdds!=null?s.acceptedOdds:s.odds),stake:s.stake||'10'};});try{localStorage.setItem('hb-bookings',JSON.stringify(savedBookings));}catch(e){}lastBookingCode=code;copyMessage=null;updateSlip();}
+  function fallbackCopy(text,done){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);if(done)done();}
+  function copyBookingCode(code){if(!code)return;function showCopied(){copyMessage={type:'ok',text:'Code Disalin'};message=null;updateSlip();if(copyTimer)clearTimeout(copyTimer);copyTimer=setTimeout(function(){if(copyMessage&&copyMessage.text==='Code Disalin'){copyMessage=null;updateSlip();}},2000);}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(code).then(showCopied).catch(function(){fallbackCopy(code,showCopied);});else fallbackCopy(code,showCopied);}
+  function copyBetId(id){if(!id)return;function done(){var tip=document.getElementById('bet-id-copy-tip');if(tip){tip.textContent='ID disalin';tip.style.opacity='1';setTimeout(function(){if(tip)tip.style.opacity='0';},1600);}}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(id).then(done).catch(function(){fallbackCopy(id,done);});else fallbackCopy(id,done);}
+  function submitBookingCode(){var input=document.getElementById('booking-code-input'),val=(input&&input.value||'').trim().toUpperCase();if(!val){message={type:'warn',text:'Masukkan booking code.'};updateSlip();return;}var pack=savedBookings[val];if(pack&&pack.length){selections=pack.map(function(s){registerOdds(s.id,s.odds,false);return{id:s.id,matchId:s.matchId,match:s.match,label:s.label,odds:Number(s.odds),acceptedOdds:Number(s.odds),stake:s.stake||'10',suspended:false,oddsChanged:false};});}else if(bookingCodes[val]){selections=[];bookingCodes[val].forEach(function(item){var m=matches.find(function(x){return x.id===item.matchId;});if(!m)return;var labels=[m.home,'Seri',m.away],i=item.labelIdx||0,selId=m.id+'-book-'+i;registerOdds(selId,m.odds[i],false);selections.push({id:selId,matchId:m.id,match:m.home+' v '+m.away,label:labels[i],odds:Number(m.odds[i]),acceptedOdds:Number(m.odds[i]),stake:'10',suspended:false,oddsChanged:false});});}else{message={type:'danger',text:'Code tidak ditemukan.'};updateSlip();return;}lastBookingCode=null;copyMessage=null;message=null;placeSuccess=false;syncBetMode();currentTab='slip';updateSlip();refreshLists();}
+
+  function openMatch(id,fromSlip){if(fromSlip===true||currentView==='slip')returnToMyBets=true;else if(currentView!=='match'){previousView=currentView;returnToMyBets=false;}currentMatchId=id;showView('match');}
+  function openBetMatch(matchId,comboId){if(!matchId)return;returnToMyBets=true;returnComboId=comboId||null;if(comboId)expandedCombos[comboId]=true;if(activeBetDetailId)returnToBetDetailId=activeBetDetailId;closeBetDetail(true);openMatch(matchId,true);}
+  function openComboLeg(matchId,comboId,ev){if(ev)ev.stopPropagation();openBetMatch(matchId,comboId);}
+  function goBackFromMatch(){if(returnToMyBets){returnToMyBets=false;if(returnComboId)expandedCombos[returnComboId]=true;var reopenDetail=returnToBetDetailId;returnComboId=null;showView('slip');currentTab='bets';updateSlip();if(reopenDetail){returnToBetDetailId=null;setTimeout(function(){openBetDetail(reopenDetail);},40);}}else showView(previousView||'home');}
+  function closeSlip(){var target=slipReturnView||'home';if(target==='slip'||target==='match')target='home';returnToMyBets=false;returnComboId=null;returnToBetDetailId=null;closeBetDetail(true);showView(target);}
+  function openBetDetail(betId,ev){if(ev)ev.stopPropagation();var b=bets.find(function(x){return x.id===betId;});if(!b)return;activeBetDetailId=betId;var sub=document.getElementById('bet-detail-sub');if(sub)sub.textContent=placeSuccessFlow?'Konfirmasi Taruhan':'Rincian Taruhan';renderBetDetail(b);document.getElementById('bet-detail-overlay').classList.add('open');var body=document.getElementById('bet-detail-body');if(body)body.scrollTop=0;}
+  function closeBetDetail(evOrForce){var force=evOrForce===true;if(!force&&evOrForce&&evOrForce.target&&evOrForce.target.id!=='bet-detail-overlay'&&!evOrForce.target.classList.contains('bet-detail-close')&&!(evOrForce.target.closest&&evOrForce.target.closest('.bet-detail-close')))return;document.getElementById('bet-detail-overlay').classList.remove('open');activeBetDetailId=null;if(placeSuccessFlow){placeSuccessFlow=false;currentTab='slip';showView('slip');updateSlip();}}
+  function renderBetDetail(b){var cur=b.currency||selectedCurrency,isCombo=b.betType==='Combo'&&b.legs&&b.legs.length,potential=Number(b.stake)*Number(b.odds),html='';html+='<div class="bet-detail-id"><div><div class="id-label">ID Taruhan</div><div class="id-value">'+b.id+'</div></div><button type="button" class="copy-id-btn" onclick="copyBetId(\''+String(b.id).replace(/'/g,"\\'")+'\')">Salin</button></div>';html+='<div id="bet-id-copy-tip" style="font-size:10px;color:var(--success);font-weight:700;margin:-4px 0 10px;opacity:0;transition:opacity .2s">ID disalin</div>';html+='<div class="bet-detail-status-row">'+statusBadge(b.status)+'<span class="badge muted">'+(b.betType||'Single')+(isCombo?' · '+b.legs.length+' legs':'')+'</span></div>';if(!isCombo&&b.matchId){var mm=getMatchById(b.matchId),sinfo=formatMatchScoreText(mm);if(sinfo)html+='<div class="bet-detail-score-box '+sinfo.kind+'"><div class="sc-left"><small>Skor pertandingan</small><b>'+(b.match||'')+'</b></div><div class="sc-right"><span class="sc-val">'+sinfo.score+'</span><span class="sc-state">'+sinfo.label+(mm&&mm.live&&mm.clock?' · '+mm.clock:'')+'</span></div></div>';}html+='<div class="bet-detail-grid"><div class="bet-detail-tile"><small>Stake</small><b>'+fmtCurrency(b.stake,cur)+' '+cur+'</b></div><div class="bet-detail-tile"><small>Odds</small><b class="accent">'+Number(b.odds).toFixed(2)+'</b></div><div class="bet-detail-tile"><small>'+(b.status==='open'?'Potensi':'Return')+'</small><b class="'+(b.status==='won'||b.status==='cashout'?'ok':'accent')+'">'+fmtCurrency(b.status==='open'?potential:(b.returnValue||0),cur)+' '+cur+'</b></div><div class="bet-detail-tile"><small>Waktu pasang</small><b style="font-size:12px">'+formatBetDate(b.placedAt)+'</b></div></div>';html+='<div class="bet-detail-section"><h4>Info taruhan</h4><div class="bet-detail-row"><span>Tipe</span><b>'+(b.betType||'Single')+'</b></div><div class="bet-detail-row"><span>Olahraga</span><b>'+(b.sport||'—')+'</b></div><div class="bet-detail-row"><span>Liga / Event</span><b>'+(b.league||'—')+'</b></div><div class="bet-detail-row"><span>Seleksi</span><b>'+(b.label||'—')+'</b></div><div class="bet-detail-row"><span>Status</span><b>'+String(b.status||'').toUpperCase()+'</b></div></div>';if(isCombo){html+='<div class="bet-detail-section"><h4>Legs combo ('+b.legs.length+')</h4>';b.legs.forEach(function(leg){var legMatch=getMatchById(leg.matchId),legScore=formatMatchScoreText(legMatch);html+='<div class="bet-detail-leg"><div class="leg-match">'+leg.match+(legScore?' · <b style="color:var(--ink)">'+legScore.score+'</b> <span style="color:var(--'+(legScore.kind==='live'?'accent':'quiet')+')">('+legScore.label+')</span>':'')+'</div><div class="leg-main"><span>'+leg.label+' · '+Number(leg.odds).toFixed(2)+'</span>'+legResultBadge(leg.result)+'</div>';if(leg.matchId)html+='<button type="button" class="leg-open-match" onclick="openBetMatch(\''+leg.matchId+'\',\''+b.id+'\')">Buka pertandingan →</button>';html+='</div>';});html+='</div>';}else{html+='<div class="bet-detail-section"><h4>Pertandingan</h4><div class="bet-detail-row"><span>Match</span><b>'+(b.match||'—')+'</b></div><div class="bet-detail-row"><span>Pilihan</span><b>'+(b.label||'—')+'</b></div>';if(b.matchId)html+='<button type="button" class="outline" style="margin-top:10px" onclick="openBetMatch(\''+b.matchId+'\')">Buka halaman pertandingan</button>';html+='</div>';}html+='<div class="bet-detail-actions">';if(b.status==='open'){html+='<button class="primary" onclick="cashout(\''+b.id+'\'); closeBetDetail(true);">Cash out · '+fmtCurrency(b.stake*b.odds*0.9,cur)+' '+cur+'</button>';html+='<button class="outline danger-outline" onclick="cancelBet(\''+b.id+'\'); closeBetDetail(true);">Batalkan taruhan</button>';}html+='<button class="outline" onclick="closeBetDetail(true)">'+(placeSuccessFlow?'Ke BET SLIP':'Tutup rincian')+'</button></div>';document.getElementById('bet-detail-body').innerHTML=html;}
+  function oddsSettingsBlock(showClear){var clearBtn=showClear?'<button type="button" class="btn-clear-all" onclick="clearAllSelections()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>':'';return'<div class="slip-footer-row">'+clearBtn+'<div class="odds-settings'+(oddsSettingsOpen?' open':'')+'"><button type="button" class="odds-settings-head" onclick="toggleOddsSettings()">Odds Settings <span class="chev">▼</span></button><div class="odds-settings-body"><label class="odds-opt"><input type="radio" name="odds-accept" '+(oddsAcceptMode==='any'?'checked':'')+' onchange="setOddsAccept(\'any\')"><span>Accept any odds changes<small>Odds boleh naik atau turun otomatis.</small></span></label><label class="odds-opt"><input type="radio" name="odds-accept" '+(oddsAcceptMode==='higher'?'checked':'')+' onchange="setOddsAccept(\'higher\')"><span>Accept higher odds changes<small>Hanya terima jika odds lebih tinggi.</small></span></label><label class="odds-opt"><input type="radio" name="odds-accept" '+(oddsAcceptMode==='none'?'checked':'')+' onchange="setOddsAccept(\'none\')"><span>Don\'t accept odds changes<small>Konfirmasi manual jika odds berubah.</small></span></label></div></div></div>';}
+
+  function highlightCardHTML(m,isUpcoming){var status=isUpcoming?('UPCOMING · '+m.sport.toUpperCase()):('LIVE · '+m.sport.toUpperCase());var labels=[m.home,'Seri',m.away],oddsHtml='';if(!m.finished){oddsHtml='<div class="banner-odds" onclick="event.stopPropagation()">';m.odds.forEach(function(o,i){var selId=m.id+'-1x2-'+i;registerOdds(selId,o,false);var picked=selections.some(function(s){return s.id===selId;})?' picked':'';oddsHtml+='<button type="button" class="banner-odd'+picked+'" onclick="toggleSelection(\''+selId+'\',\''+m.home+' v '+m.away+'\',\''+labels[i].replace(/'/g,"\\'")+'\','+o+',\''+m.id+'\')"><small>'+['1','X','2'][i]+'</small><b>'+Number(o).toFixed(2)+'</b></button>';});oddsHtml+='</div>';}return'<div class="live-banner-home" style="position:relative">'+favBtnHTML(m.id)+'<img class="hero-bg" src="https://images.hostinger.com/6d607d15-e41c-4cee-9182-f2ec4491660f/0dff0e4f-3d0f-49e7-a2b3-f607cc3d5852.png" alt=""><div class="banner-league">'+m.league+'</div><div class="hero-content" onclick="openMatch(\''+m.id+'\')"><div class="live-label">'+(isUpcoming?'':'<span class="live-dot" style="display:inline-block;margin:0"></span> ')+status+'</div><div class="hero-teams"><div class="hero-team">'+teamLogoHTML(m.homeLogo,m.home,m.entityType)+'<b>'+m.home+'</b></div><div class="hero-score-wrap"><div class="hero-clock">'+m.clock+'</div><div class="hero-score">'+m.score+'</div></div><div class="hero-team"><b>'+m.away+'</b>'+teamLogoHTML(m.awayLogo,m.away,m.entityType)+'</div></div></div>'+oddsHtml+'</div>';}
+  function renderLiveHighlights(){var live=matches.filter(function(m){return m.live&&!m.finished;}).slice(0,8),el=document.getElementById('live-highlights');if(!el)return;el.innerHTML=live.length?'<div class="hl-group">'+live.map(function(m){return highlightCardHTML(m,false);}).join('')+'</div>':'';}
+  function renderTopUpcomingBanners(){ensureMatchDates();var list=matches.filter(function(m){return !m.live&&!m.finished;}).slice(0,8),el=document.getElementById('top-upcoming-banners');if(!el)return;el.innerHTML=list.length?'<div class="hl-group">'+list.map(function(m){return highlightCardHTML(m,true);}).join('')+'</div>':'';}
+  function renderTopCompsBanner(){const el=document.getElementById('top-comps-banner');if(!el)return;el.innerHTML='<div class="inf-group">'+competitions.map(function(c){return'<button type="button" class="comp-circle-btn" onclick="sportsCat=\''+getSportCategoryFromSport(c.sport)+'\';sportsSub=\'top\';selectedSportId=null;selectedSportLabel=null;selectedTournament=null;showView(\'football\')"><span class="comp-circle">'+compVisualHTML(c)+'</span><span class="comp-circle-name">'+c.name+'</span></button>';}).join('')+'</div>';}
+  function scrollSlipToTop(){var body=document.getElementById('slip-sheet-body'),view=document.getElementById('view-slip'),page=document.getElementById('slip-page');if(body)body.scrollTop=0;if(view)view.scrollTop=0;if(page){page.style.transform='translateY(0)';page.classList.remove('pulling');}var hint=document.getElementById('slip-pull-hint');if(hint)hint.classList.remove('show');}
+  function showView(name){if(name==='slip'&&currentView!=='slip'&&currentView!=='match')slipReturnView=currentView||'home';if(name==='match'&&currentView!=='match'&&currentView!=='slip')previousView=currentView;currentView=name;document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});var viewEl=document.getElementById('view-'+name);if(viewEl)viewEl.classList.add('active');var homeBtn=document.getElementById('tab-home-fixed');if(homeBtn)homeBtn.classList.toggle('active',name==='home');document.querySelectorAll('#page-tabs button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-view')===name);});document.querySelectorAll('.bottom-nav button').forEach(function(b,i){if(i===1)b.classList.toggle('active',name==='home'||name==='live'||name==='upcoming'||name==='football'||name==='match'||name==='prediction'||name==='favorite');});var tabs=document.getElementById('page-tabs-wrap'),main=document.getElementById('main-content'),fab=document.getElementById('mobile-slip-fab');if(tabs){if(name==='match'||name==='slip')tabs.classList.add('hidden');else tabs.classList.remove('hidden');}if(main){if(name==='slip')main.classList.add('slip-full');else main.classList.remove('slip-full');}if(fab)fab.classList.toggle('hidden-fab',name==='slip');if(name==='home')renderHome();else if(name==='live')renderLive();else if(name==='upcoming')renderUpcoming();else if(name==='football')renderFootball();else if(name==='prediction')renderPrediction();else if(name==='favorite')renderFavorite();else if(name==='match'&&currentMatchId)renderMatchDetail(currentMatchId);else if(name==='slip'){updateSlip();requestAnimationFrame(function(){scrollSlipToTop();});}}
+  function filterSport(btn,sport){document.querySelectorAll('#home-sport-nav button').forEach(function(b){b.classList.remove('selected');});btn.classList.add('selected');currentSport=sport;renderHome();}
+  function renderMatchRow(m){var labels=[m.home,'Seri',m.away],oddsBtns=m.odds.map(function(o,i){var selId=m.id+'-1x2-'+i;registerOdds(selId,o,false);var picked=selections.some(function(s){return s.id===selId;})?'picked':'',mv=m.move&&m.move[i],mvHtml=mv==='up'?'<span class="movement up">↗</span>':mv==='down'?'<span class="movement down">↘</span>':'',disabled=m.finished?' disabled style="opacity:.5"':'',click=m.finished?'':'onclick="toggleSelection(\''+selId+'\',\''+m.home+' v '+m.away+'\',\''+labels[i].replace(/'/g,"\\'")+'\','+o+',\''+m.id+'\')"';return'<button class="odd '+picked+'" '+click+disabled+'><small>'+['1','X','2'][i]+'</small><b>'+o.toFixed(2)+'</b>'+mvHtml+'</button>';}).join('');var lg=compLogo(m.league);return'<article class="match-row" style="position:relative">'+favBtnHTML(m.id)+'<div class="match-meta"><span class="league-meta">'+(lg?'<img src="'+lg+'" alt="" onerror="this.remove()">':'')+m.league+' · '+m.sport+'</span></div><div class="match-line"><div class="teams" onclick="openMatch(\''+m.id+'\')"><div class="team-logos">'+teamLogoHTML(m.homeLogo,m.home,m.entityType)+teamLogoHTML(m.awayLogo,m.away,m.entityType)+'</div><div><b>'+m.home+'</b><b>'+m.away+'</b></div><div class="score"><strong>'+m.score+'</strong><small class="'+(m.live?'live-time':'')+'">'+(m.finished?'FT':(m.live?'LIVE · ':'')+m.clock)+'</small></div></div>'+(m.finished?'':'<div class="odds-group">'+oddsBtns+'</div>')+'</div></article>';}
+  function toggleHomeLiveExpand(){homeLiveExpanded=!homeLiveExpanded;renderHome();}
+  function toggleHomeUpcomingExpand(){homeUpcomingExpanded=!homeUpcomingExpanded;renderHome();}
+  function renderHome(){var filterFn=function(m){return(currentSport==='Semua'||m.sport===currentSport);};document.getElementById('home-sport-nav').innerHTML=SPORT_LIST.map(function(s){return'<button class="'+(s===currentSport?'selected':'')+'" onclick="filterSport(this,\''+s+'\')">'+sportIconHTML(s)+s+'</button>';}).join('');renderTopCompsBanner();renderLiveHighlights();renderTopUpcomingBanners();var liveAll=matches.filter(function(m){return m.live&&!m.finished&&filterFn(m);}),upcomingAll=matches.filter(function(m){return !m.live&&!m.finished&&filterFn(m);});var liveShow=homeLiveExpanded?liveAll:liveAll.slice(0,5);document.getElementById('live-matches').innerHTML=liveShow.length?liveShow.map(function(m){return highlightCardHTML(m,false);}).join(''):'<div class="list-empty"><h3>Tidak ada yang live.</h3></div>';document.getElementById('live-count').textContent=liveAll.length;var liveBtn=document.getElementById('live-expand-btn'),liveTxt=document.getElementById('live-expand-text');if(liveBtn){if(liveAll.length>5){liveBtn.style.display='flex';liveBtn.classList.toggle('open',homeLiveExpanded);if(liveTxt)liveTxt.textContent=homeLiveExpanded?'Sembunyikan':'Tampilkan semua ('+liveAll.length+')';}else liveBtn.style.display='none';}var upShow=homeUpcomingExpanded?upcomingAll:upcomingAll.slice(0,5);document.getElementById('upcoming-matches-home').innerHTML=upShow.length?upShow.map(function(m){return highlightCardHTML(m,true);}).join(''):'<div class="list-empty"><h3>Tidak ada jadwal.</h3></div>';var upCnt=document.getElementById('home-upcoming-count');if(upCnt)upCnt.textContent=upcomingAll.length;var upBtn=document.getElementById('upcoming-expand-btn'),upTxt=document.getElementById('upcoming-expand-text');if(upBtn){if(upcomingAll.length>5){upBtn.style.display='flex';upBtn.classList.toggle('open',homeUpcomingExpanded);if(upTxt)upTxt.textContent=homeUpcomingExpanded?'Sembunyikan':'Tampilkan semua ('+upcomingAll.length+')';}else upBtn.style.display='none';}}
+  function renderPrediction(){var box=document.getElementById('prediction-list');if(!box)return;var liveOrUp=matches.filter(function(m){return !m.finished;}).slice(0,8);if(!liveOrUp.length){box.innerHTML='<div class="list-empty"><h3>Belum ada prediksi.</h3></div>';return;}box.innerHTML=liveOrUp.map(function(m,idx){var pickIdx=m.odds[0]<=m.odds[2]?0:2,pickLabel=[m.home,'Seri',m.away][pickIdx],conf=72+(idx%20);return'<div class="pred-card"><div class="pc-top"><span class="badge info">'+m.league+'</span><span class="pc-conf">'+conf+'% confidence</span></div><h3>'+m.home+' v '+m.away+'</h3><p>Model Housebets melihat momentum & form terkini. Saran: <b>'+pickLabel+'</b> @ '+Number(m.odds[pickIdx]).toFixed(2)+'.</p><div class="pc-pick"><span>Pick · 1X2</span><b>'+pickLabel+' · '+Number(m.odds[pickIdx]).toFixed(2)+'</b></div><button class="outline" style="margin-top:10px" onclick="openMatch(\''+m.id+'\')">Buka pertandingan</button></div>';}).join('');}
+  function renderFavorite(){var box=document.getElementById('favorite-list');if(!box)return;var list=favorites.map(function(id){return getMatchById(id);}).filter(Boolean);if(!list.length){box.innerHTML='<div class="list-empty"><h3>Belum ada favorit.</h3><p>Tap ♡ pada banner/match untuk menyimpan.</p></div>';return;}box.innerHTML=list.map(function(m){return highlightCardHTML(m,!m.live);}).join('');}
+  function getMatchCategory(m){var s=(m.sport||'').toLowerCase();if(s==='esports'||s.indexOf('esport')>=0)return'esports';if(s==='formula 1'||s==='horse racing'||s.indexOf('racing')>=0||s.indexOf('kuda')>=0)return'racing';return'sports';}
+  function getSportCategoryFromSport(sport){var s=(sport||'').toLowerCase();if(s==='esports'||s.indexOf('esport')>=0)return'esports';if(s==='formula 1'||s==='horse racing'||s.indexOf('racing')>=0)return'racing';return'sports';}
+  function setSportsSub(sub){sportsSub=sub;if(sub==='all')resetSportsDropdowns();document.querySelectorAll('#sports-sub-tabs > button[data-sub]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-sub')===sub);});renderFootball();}
+  function matchBelongsToSelectedSport(m){if(!selectedSportId)return getMatchCategory(m)===sportsCat;if(sportsCat==='sports')return m.sport===selectedSportId;if(sportsCat==='esports'){if(m.sport!=='Esports')return false;var item=ESPORTS_DD_ITEMS.find(function(x){return x.id===selectedSportId;});if(!item||!item.leagueHint)return true;return(m.league||'').toLowerCase().indexOf(item.leagueHint.toLowerCase())>=0||(m.league||'').toLowerCase().indexOf(selectedSportId.toLowerCase())>=0;}if(sportsCat==='racing'){var rItem=RACING_DD_ITEMS.find(function(x){return x.id===selectedSportId;});var key=rItem?(rItem.sportKey||rItem.id):selectedSportId;return m.sport===key;}return true;}
+  function matchBelongsToTournament(m){if(!selectedTournament)return true;var league=(m.league||'').toLowerCase(),t=selectedTournament.toLowerCase();return league.indexOf(t)>=0;}
+  function renderFootball(){ensureMatchDates();var tempWrap=document.getElementById('sports-temp-wrap');if(tempWrap){if(selectedSportId){tempWrap.style.display='block';document.getElementById('sports-temp-label').textContent=selectedSportLabel||selectedSportId;}else tempWrap.style.display='none';}document.querySelectorAll('#sports-sub-tabs > button[data-sub]').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-sub')===sportsSub);});document.getElementById('dd-sports-btn').classList.toggle('active',sportsCat==='sports');document.getElementById('dd-esports-btn').classList.toggle('active',sportsCat==='esports');document.getElementById('dd-racing-btn').classList.toggle('active',sportsCat==='racing');var list=matches.filter(function(m){if(m.finished)return false;if(!matchBelongsToSelectedSport(m))return false;if(!matchBelongsToTournament(m))return false;if(sportsSub==='live')return m.live&&!m.finished;if(sportsSub==='upcoming')return !m.live&&!m.finished;return !m.finished;});if(sportsSub==='top')list=list.slice().sort(function(a,b){if(a.live&&!b.live)return-1;if(!a.live&&b.live)return 1;return 0;});var grouped={};list.forEach(function(m){if(!grouped[m.league])grouped[m.league]=[];grouped[m.league].push(m);});var keys=Object.keys(grouped),box=document.getElementById('football-matches');if(!keys.length){box.innerHTML='<div class="list-empty"><h3>Tidak ada pertandingan.</h3><p>Coba cabang olahraga atau filter turnamen lain.</p></div>';return;}box.innerHTML=keys.map(function(league){var lg=compLogo(league);return'<div class="league-block"><div class="league-head">'+(lg?'<img src="'+lg+'" alt="" onerror="this.remove()">':'')+'<h3>'+league+'</h3></div><div class="match-list">'+grouped[league].map(renderMatchRow).join('')+'</div></div>';}).join('');}
+  function buildMarkets(m){return{'Popular':[{title:'Hasil pertandingan',labels:[m.home,'Seri',m.away],odds:m.odds,move:m.move,suspended:false},{title:'Kedua tim mencetak gol',labels:['Ya','Tidak'],odds:[1.32,3.10],move:['up','down'],suspended:false}],'Goals':[{title:'Total gol · 2,5',labels:['Over 2,5','Under 2,5'],odds:[1.70,2.15],move:[null,'up'],suspended:false}]};}
+  function parseScoreParts(score){var s=String(score||'').trim();if(!s||s==='– : –'||s==='—')return{home:'–',away:'–'};var parts=s.split(/\s*[:·]\s*/);if(parts.length>=2)return{home:parts[0].trim(),away:parts[1].trim()};return{home:s,away:''};}
+  function renderMatchDetail(id){var m=matches.find(function(x){return x.id===id;})||matches[0],finished=!!m.finished,isLive=m.live&&!finished,scores=parseScoreParts(m.score);var statusHTML=finished?'<div class="sb-status"><span class="ft-badge" style="margin:0">HASIL AKHIR · FT</span></div>':(isLive?'<div class="sb-status"><span class="live-dot"></span> LIVE</div>':'<div class="sb-status" style="color:#8aa8c0">UPCOMING</div>');var oddsHTML='';if(!finished){var labels=[m.home,'Seri',m.away],shortLabels=['1','X','2'];oddsHTML='<div class="sb-odds-strip">';m.odds.forEach(function(o,i){var selId=m.id+'-1x2-'+i;registerOdds(selId,o,false);var picked=selections.some(function(s){return s.id===selId;})?' picked':'';oddsHTML+='<button type="button" class="sb-odd-btn'+picked+'" onclick="toggleSelection(\''+selId+'\',\''+m.home+' v '+m.away+'\',\''+labels[i].replace(/'/g,"\\'")+'\','+o+',\''+m.id+'\')"><small>'+shortLabels[i]+'</small><b>'+Number(o).toFixed(2)+'</b></button>';});oddsHTML+='</div>';}var marketsHTML='';if(!finished){var groups=buildMarkets(m);window.currentGroups=groups;window.currentMatch=m;var keys=Object.keys(groups);marketsHTML='<div class="market-tabs">'+keys.map(function(g,i){return'<button class="'+(i===0?'active':'')+'" onclick="switchMarket(this,\''+g+'\')">'+g+'</button>';}).join('')+'</div><div id="markets-container">'+renderMarketGroup(groups['Popular'],m)+'</div>';}else marketsHTML='<div class="list-empty" style="margin-top:8px"><h3>Pertandingan selesai</h3><p>Match history</p></div>';var centerBlock=(finished||isLive)?('<div class="sb-clock">'+m.clock+'</div><div class="sb-scores"><span class="sb-score-num">'+scores.home+'</span><span class="sb-score-sep"></span><span class="sb-score-num">'+scores.away+'</span></div>'):('<div class="sb-clock">'+m.clock+'</div><div class="sb-vs">VS</div>');document.getElementById('match-detail').innerHTML='<section class="scoreboard" style="position:relative">'+favBtnHTML(m.id)+'<div class="sb-top">'+statusHTML+'<div class="sb-league">'+m.league+' · '+m.sport+'</div></div><div class="sb-main"><div class="sb-team-col">'+crestHTML(m.homeLogo,m.home,false,m.entityType)+'<div class="sb-team-name">'+m.home+'</div></div><div class="sb-center">'+centerBlock+'</div><div class="sb-team-col away">'+crestHTML(m.awayLogo,m.away,true,m.entityType)+'<div class="sb-team-name">'+m.away+'</div></div></div>'+oddsHTML+'<div class="sb-actions"><button onclick="goBackFromMatch()">← Kembali</button></div></section>'+marketsHTML;}
+  function renderMarketGroup(markets,m){return markets.map(function(market){var opts='';market.labels.forEach(function(label,i){if(market.odds[i]==null)return;var key=m.id+'|'+market.title+'|'+i;registerOdds(key,market.odds[i],false);var picked=selections.some(function(s){return s.id===key;})?'picked':'';opts+='<button class="odd '+picked+'" onclick="toggleSelection(\''+key+'\',\''+m.home+' v '+m.away+'\',\''+label.replace(/'/g,"\\'")+'\','+market.odds[i]+',\''+m.id+'\')"><span>'+label+'</span><b>'+Number(market.odds[i]).toFixed(2)+'</b></button>';});return'<section class="market"><h3>'+market.title+'</h3><div class="market-options">'+opts+'</div></section>';}).join('');}
+  function switchMarket(btn,group){document.querySelectorAll('.market-tabs button').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.getElementById('markets-container').innerHTML=renderMarketGroup(window.currentGroups[group]||[],window.currentMatch);}
+  function syncSelectionStates(){selections.forEach(function(s){var cur=currentOdds(s.id);s.liveOdds=cur.odds;s.suspended=cur.suspended||cur.odds==null;s.oddsChanged=!s.suspended&&s.liveOdds!=null&&Number(s.acceptedOdds)!==Number(s.liveOdds);});}
+  function toggleSelection(id,match,label,odds,matchId){if(currentOdds(id).suspended){message={type:'danger',text:'Selection suspended.'};updateSlip();showView('slip');return;}var idx=selections.findIndex(function(s){return s.id===id;});if(idx>=0)selections.splice(idx,1);else{selections.push({id:id,matchId:matchId||null,match:match,label:label,odds:Number(odds),acceptedOdds:Number(odds),stake:'10',suspended:false,oddsChanged:false});registerOdds(id,odds,false);}lastBookingCode=null;copyMessage=null;placeSuccess=false;syncBetMode();message=null;updateSlip();refreshLists();}
+  function removeSelection(id){selections=selections.filter(function(s){return s.id!==id;});lastBookingCode=null;copyMessage=null;syncBetMode();message=null;updateSlip();refreshLists();}
+  function metaFromSelection(s){var m=s.matchId?matches.find(function(x){return x.id===s.matchId;}):null;return{sport:m?m.sport:'Sepak bola',league:m?m.league:'—'};}
+  function placeBets(){syncSelectionStates();if(!selections.length)return;if(selections.some(function(s){return s.suspended;})){message={type:'danger',text:'Ada selection suspended.'};updateSlip();return;}if(oddsAcceptMode==='none'&&selections.some(function(s){return s.oddsChanged;})){message={type:'warn',text:'Odds berubah — terima dulu.'};updateSlip();return;}if(oddsAcceptMode==='any')selections.forEach(function(s){if(s.oddsChanged&&!s.suspended){s.acceptedOdds=s.liveOdds;s.odds=s.liveOdds;s.oddsChanged=false;}});var bal=getBalance(),cur=currencyLabel(),newIds=[];if(betMode==='combo'){if(selections.length<2){message={type:'warn',text:'Combo minimal 2 selection.'};updateSlip();return;}var stake=Number(comboStake);if(isStakeBelowMin(comboStake)||stake>1000){message={type:'danger',text:'Stake combo minimal 0.5.'};updateSlip();return;}if(stake>bal){message={type:'danger',text:'Saldo tidak cukup.'};updateSlip();return;}var comboOdds=selections.reduce(function(acc,s){return acc*Number(s.acceptedOdds);},1),bonusPct=comboBonusPercent(selections.length),effectiveOdds=comboOdds*(1+bonusPct/100),sports=[],leagues=[],legs=selections.map(function(s){var meta=metaFromSelection(s);if(sports.indexOf(meta.sport)<0)sports.push(meta.sport);if(leagues.indexOf(meta.league)<0)leagues.push(meta.league);return{matchId:s.matchId,match:s.match,label:s.label,odds:Number(s.acceptedOdds),result:null};});setBalance(bal-stake);var cid='combo-'+Date.now();bets.unshift({id:cid,matchId:selections[0].matchId||null,match:legs.length+' selections',label:'Combo ×'+legs.length+(bonusPct?' (+'+bonusPct+'%)':''),odds:Number(effectiveOdds.toFixed(2)),stake:stake,status:'open',returnValue:0,placedAt:new Date().toISOString(),currency:cur,sport:sports.join(' · '),league:leagues.join(' · '),betType:'Combo',legs:legs});newIds.push(cid);}else{var total=0;for(var i=0;i<selections.length;i++){if(isStakeBelowMin(selections[i].stake)){message={type:'danger',text:'Stake minimal 0.5.'};updateSlip();return;}total+=Number(selections[i].stake);}if(total>bal){message={type:'danger',text:'Saldo tidak cukup.'};updateSlip();return;}selections.forEach(function(s){setBalance(getBalance()-Number(s.stake));var meta=metaFromSelection(s),nid=s.id+'-'+Date.now()+Math.random().toString(36).slice(2,5);bets.unshift({id:nid,matchId:s.matchId||null,match:s.match,label:s.label,odds:Number(s.acceptedOdds),stake:Number(s.stake),status:'open',returnValue:0,placedAt:new Date().toISOString(),currency:cur,sport:meta.sport,league:meta.league,betType:'Single',legs:null});newIds.push(nid);});}selections=[];lastBookingCode=null;copyMessage=null;message=null;placeSuccess=true;if(placeSuccessTimer)clearTimeout(placeSuccessTimer);placeSuccessTimer=setTimeout(function(){placeSuccess=false;updateSlip();},4000);syncBetMode();currentTab='slip';updateBalanceUI();updateSlip();refreshLists();placeSuccessFlow=true;showView('slip');if(newIds[0])setTimeout(function(){openBetDetail(newIds[0]);},150);}
+  function cashout(id,ev){if(ev)ev.stopPropagation();var b=bets.find(function(x){return x.id===id;});if(!b||b.status!=='open')return;var value=Number((b.stake*b.odds*0.9).toFixed(2));b.status='cashout';b.returnValue=value;setBalance(getBalance()+value);message={type:'ok',text:'Cash out +'+fmt(value)};updateBalanceUI();updateSlip();}
+  function cancelBet(id,ev){if(ev)ev.stopPropagation();var b=bets.find(function(x){return x.id===id;});if(!b||b.status!=='open')return;b.status='cancelled';b.returnValue=Number(b.stake);setBalance(getBalance()+Number(b.stake));message={type:'info',text:'Taruhan dibatalkan · stake dikembalikan'};updateBalanceUI();updateSlip();}
+  function toggleComboExpand(id,ev){if(ev)ev.stopPropagation();expandedCombos[id]=!expandedCombos[id];updateSlip();}
+  function switchTab(tab){currentTab=tab;updateSlip();}
+  function setMyBetsFilter(f){myBetsFilter=f;if(f!=='history'){historyFilter='today';customDateApplied=null;}updateSlip();}
+  function setHistoryFilter(f){historyFilter=f;if(f!=='custom')customDateApplied=null;updateSlip();}
+  function cancelCustomDate(){historyFilter='today';customDateApplied=null;updateSlip();}
+  function showCustomDate(){var fromEl=document.getElementById('custom-from'),toEl=document.getElementById('custom-to');if(!fromEl||!toEl||!fromEl.value||!toEl.value){message={type:'warn',text:'Pilih tanggal dari dan sampai.'};updateSlip();return;}var from=fromEl.value,to=toEl.value;if(from>to){var tmp=from;from=to;to=tmp;}customDateApplied={from:from,to:to};updateSlip();}
+  function filterBetsByHistory(list){var nowD=new Date(),startOfToday=new Date(nowD.getFullYear(),nowD.getMonth(),nowD.getDate());if(historyFilter==='today')return list.filter(function(b){return new Date(b.placedAt)>=startOfToday;});if(historyFilter==='week'){var weekAgo=new Date(startOfToday);weekAgo.setDate(weekAgo.getDate()-7);return list.filter(function(b){return new Date(b.placedAt)>=weekAgo;});}if(historyFilter==='month'){var monthAgo=new Date(startOfToday);monthAgo.setDate(monthAgo.getDate()-30);return list.filter(function(b){return new Date(b.placedAt)>=monthAgo;});}if(historyFilter==='recent')return list.slice().sort(function(a,b){return new Date(b.placedAt)-new Date(a.placedAt);}).slice(0,10);if(historyFilter==='custom'&&customDateApplied){var fromD=startOfDay(new Date(customDateApplied.from+'T00:00:00')),toD=endOfDay(new Date(customDateApplied.to+'T00:00:00'));return list.filter(function(b){var t=new Date(b.placedAt);return t>=fromD&&t<=toD;});}return list;}
+  function statusBadge(status){if(status==='open')return'<span class="badge muted">OPEN</span>';if(status==='won')return'<span class="badge ok">WIN</span>';if(status==='lost')return'<span class="badge danger">LOST</span>';if(status==='cashout')return'<span class="badge warn">CASHED OUT</span>';if(status==='cancelled')return'<span class="badge muted">CANCELLED</span>';if(status==='refund')return'<span class="badge info">REFUND</span>';return'<span class="badge muted">'+status+'</span>';}
+  function legResultBadge(result){if(result==='won')return'<span class="badge ok cl-result">MENANG</span>';if(result==='lost')return'<span class="badge danger cl-result">KALAH</span>';if(result==='void')return'<span class="badge muted cl-result">VOID</span>';return'<span class="badge muted cl-result">OPEN</span>';}
+  function buildCustomDateHTML(){var todayKey=toDateKey(startOfDay(new Date())),weekAgoKey=toDateKey(addDays(startOfDay(new Date()),-7)),fromVal=customDateApplied?customDateApplied.from:weekAgoKey,toVal=customDateApplied?customDateApplied.to:todayKey,appliedHint=customDateApplied?('Rentang aktif: '+customDateApplied.from+' → '+customDateApplied.to):'Pilih rentang tanggal, lalu tekan Tampilkan.';return'<div class="custom-date-box"><div class="cdr-title">Filter rentang tanggal</div><div class="cdr-row"><div><label>Dari</label><input type="date" id="custom-from" value="'+fromVal+'" /></div><div class="cdr-sep">→</div><div><label>Sampai</label><input type="date" id="custom-to" value="'+toVal+'" /></div></div><div class="custom-date-actions"><button type="button" class="btn-cancel-date" onclick="cancelCustomDate()">Batal</button><button type="button" class="btn-show-date" onclick="showCustomDate()">Tampilkan</button></div><div class="custom-range-hint">'+appliedHint+'</div></div>';}
+  function betMetaTags(b){var type=b.betType||'Single',legN=(b.legs&&b.legs.length)?b.legs.length:0,typeBadge=type==='Combo'?'<span class="badge muted">Combo</span><span class="badge combo-n">'+legN+'</span>':'<span class="badge muted">Single</span>';return'<div class="mybet-tags"><span class="badge info">'+(b.sport||'—')+'</span>'+typeBadge+'<span class="badge">'+(b.league||'—')+'</span></div>';}
+  function renderMyBetCard(b){var isCombo=b.betType==='Combo'&&b.legs&&b.legs.length,open=!!expandedCombos[b.id],html='<article class="selection mybet-card">';html+='<button type="button" class="mybet-open-detail" onclick="openBetDetail(\''+b.id+'\', event)">Rincian</button>';if(isCombo){html+='<div class="combo-head" onclick="toggleComboExpand(\''+b.id+'\', event)"><span class="toggle-ico'+(open?' open':'')+'">▼</span><div class="combo-head-body"><small>Combo · '+b.legs.length+' pertandingan</small><h3>'+b.label+'</h3>'+betMetaTags(b)+'</div></div><div class="combo-legs'+(open?' open':'')+'">';b.legs.forEach(function(leg){var legMid=leg.matchId?("'"+leg.matchId+"'"):'null',legM=getMatchById(leg.matchId),legSc=formatMatchScoreText(legM);html+='<div class="combo-leg" onclick="openComboLeg('+legMid+',\''+b.id+'\', event)"><div class="cl-match">'+leg.match+(legSc?' · '+legSc.score+' ('+legSc.label+')':'')+'</div><div class="cl-row"><span>'+leg.label+' · '+Number(leg.odds).toFixed(2)+'</span>'+legResultBadge(leg.result)+'</div></div>';});html+='</div>';}else{var sm=getMatchById(b.matchId);html+='<div class="mybet-card-body" onclick="openBetDetail(\''+b.id+'\', event)"><small>'+(b.matchId?('<span class="mybet-match-link" onclick="event.stopPropagation();openBetMatch(\''+b.matchId+'\')">'+b.match+'</span>'):b.match)+'</small>'+scoreNoteHTML(sm)+'<h3>'+b.label+'</h3>'+betMetaTags(b)+'</div>';}html+='<div class="mybet-status">'+statusBadge(b.status)+'</div><div class="mybet-meta">Stake <b>'+fmtCurrency(b.stake,b.currency||selectedCurrency)+'</b> · Odds <b>'+Number(b.odds).toFixed(2)+'</b><br>'+(b.status==='open'?'Potential <b>'+fmtCurrency(b.stake*b.odds,b.currency||selectedCurrency)+'</b>':'Return <b>'+fmtCurrency(b.returnValue||0,b.currency||selectedCurrency)+'</b>')+'</div><div class="mybet-date">'+formatBetDate(b.placedAt)+' · ID: '+b.id+'</div>';if(b.status==='open'){html+='<button class="outline" onclick="cashout(\''+b.id+'\', event)">Cash out · '+fmtCurrency(b.stake*b.odds*0.9,b.currency||selectedCurrency)+'</button><button class="outline danger-outline" onclick="cancelBet(\''+b.id+'\', event)">Cancel</button>';}if(!isCombo&&b.matchId)html+='<button class="outline" onclick="openBetMatch(\''+b.matchId+'\')">Buka pertandingan</button>';html+='</article>';return html;}
+  function buildSlipHTML(){syncSelectionStates();var html='',cur=currencyLabel();if(currentTab==='slip'){if(!selections.length){if(placeSuccess)html+='<div class="place-success"><span class="check">✓</span> Place bets Sukses</div>';html+='<div class="empty-slip"><button type="button" class="btn-bet-now" onclick="goBetNow()">Bet Now</button></div>';html+='<div class="booking-code-bar"><input type="text" id="booking-code-input" placeholder="Enter Booking Code" /><button type="button" onclick="submitBookingCode()">Go</button></div>';html+=oddsSettingsBlock(false);}else{placeSuccess=false;html+='<div class="mode-tabs"><button type="button" class="'+(betMode==='single'?'active':'')+'" onclick="setBetMode(\'single\')">Single</button><button type="button" class="'+(betMode==='combo'?'active':'')+'" onclick="setBetMode(\'combo\')">Combo</button></div>';if(betMode==='combo')html+='<div class="combo-note">Combo: odds dikalikan. Bonus naik tiap match tambahan.</div>';var anyChanged=selections.some(function(s){return s.oddsChanged;}),anySusp=selections.some(function(s){return s.suspended;});if(anySusp)html+='<div class="alert-box danger">Ada selection suspended.</div>';if(anyChanged&&oddsAcceptMode==='none')html+='<div class="alert-box warn">Odds berubah — terima dulu.</div>';selections.forEach(function(s){var displayOdds=s.oddsChanged?s.liveOdds:s.acceptedOdds,ret=(Number(s.stake||0)*Number(displayOdds||0)).toFixed(2),cls=s.suspended?'is-suspended':s.oddsChanged?'odds-changed':'',matchClick=s.matchId?' onclick="openMatch(\''+s.matchId+'\', true)" style="cursor:pointer"':'',mObj=getMatchById(s.matchId);html+='<article class="selection '+cls+'"'+matchClick+'><button class="remove" onclick="event.stopPropagation();removeSelection(\''+s.id+'\')">×</button><small>'+s.match+'</small>';if(betMode==='single')html+=scoreNoteHTML(mObj);html+='<h3>'+s.label+'</h3><div class="selection-odds"><span><span class="badge muted">'+(betMode==='combo'?'COMBO':'SINGLE')+'</span></span><span><b>'+Number(displayOdds||0).toFixed(2)+'</b></span></div>';if(betMode==='combo'&&mObj)html+=scoreNoteHTML(mObj);if(betMode==='single')html+='<label onclick="event.stopPropagation()">Stake<input class="stake-input" type="number" min="0.5" max="1000" step="0.01" value="'+s.stake+'" '+(s.suspended?'disabled':'')+' oninput="event.stopPropagation();setStakeLive(\''+s.id+'\', this.value)" inputmode="decimal" /><span class="cur-suffix">'+cur+'</span></label><span class="min-bet-warn'+(isStakeBelowMin(s.stake)?'':' hidden')+'" data-minwarn="'+s.id+'">Minimum Bet 0.5 USD</span><div class="return-line"><span>Potential return</span><b data-ret="'+s.id+'">'+fmt(ret)+' '+cur+'</b></div>';html+='</article>';});if(betMode==='combo'){var comboOdds=selections.reduce(function(acc,s){var o=s.oddsChanged?(s.liveOdds||s.acceptedOdds):s.acceptedOdds;return acc*Number(o||1);},1),bonusPct=comboBonusPercent(selections.length),comboRet=Number(comboStake||0)*comboOdds*(1+bonusPct/100),barW=Math.min(100,(bonusPct/50)*100);html+='<div class="combo-bonus"><div class="combo-bonus-head"><span>Combo Bonus</span><b>+'+bonusPct+'%</b></div><div class="combo-bonus-track"><div class="combo-bonus-fill" style="width:'+barW+'%"></div></div><div class="combo-bonus-meta"><b>'+selections.length+'</b> pertandingan</div></div>';html+='<div class="combo-summary"><div class="row"><span>Selections</span><b>'+selections.length+'</b></div><div class="row"><span>Total odds</span><b>'+comboOdds.toFixed(2)+'</b></div><div class="row bonus"><span>Bonus</span><b>+'+bonusPct+'%</b></div><div class="row"><span>Stake</span><b>'+fmt(comboStake)+' '+cur+'</b></div><div class="row total"><span>Potential return</span><b>'+fmt(comboRet)+' '+cur+'</b></div></div>';html+='<div style="padding:0 14px 8px"><label style="font-size:9px;color:var(--quiet);display:block;position:relative">Combo stake<input type="number" min="0.5" max="1000" step="0.01" value="'+comboStake+'" inputmode="decimal" style="display:block;width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 48px 10px 10px;margin-top:5px;background:var(--input-bg);color:var(--ink)" oninput="setComboStakeLive(this.value)" /><span style="position:absolute;right:10px;bottom:12px;font-size:9px;color:var(--quiet)">'+cur+'</span></label><span class="min-bet-warn'+(isStakeBelowMin(comboStake)?'':' hidden')+'" data-minwarn="combo">Minimum Bet 0.5 USD</span></div>';}if(betMode==='single')html+='<div class="quick-stakes">'+[5,10,25,50].map(function(n){return'<button type="button" onclick="selections.forEach(function(s){if(!s.suspended)s.stake=\''+n+'\';});updateSlip()">+'+n+'</button>';}).join('')+'</div>';var canPlace=!anySusp&&!(oddsAcceptMode==='none'&&anyChanged);if(betMode==='combo'&&selections.length<2)canPlace=false;if(betMode==='single'&&selections.some(function(s){return !s.suspended&&isStakeBelowMin(s.stake);}))canPlace=false;if(betMode==='combo'&&isStakeBelowMin(comboStake))canPlace=false;html+='<button class="primary" id="place-btn" onclick="placeBets()" '+(canPlace?'':'disabled')+'>'+(canPlace?(betMode==='combo'?'Place Combo':'Place '+selections.length+' single'):'Selesaikan dulu')+'</button>';html+='<button type="button" class="btn-book" onclick="generateBookingCode()">Book · Buat Booking Code</button>';if(lastBookingCode){html+='<div class="booking-result" style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><small style="display:block;font-size:10px;color:var(--quiet)">Booking Code</small><b style="font-size:16px;color:var(--accent)">'+lastBookingCode+'</b></div><button type="button" class="btn-copy-code" onclick="copyBookingCode(\''+lastBookingCode+'\')">Salin Code</button></div>';if(copyMessage&&copyMessage.text==='Code Disalin')html+='<div class="alert-box ok copy-local">Code Disalin</div>';}html+=oddsSettingsBlock(true);}}else{var filters=[['all','Semua'],['open','Open'],['won','Win'],['lost','Lost'],['cashout','Cashed Out'],['cancelled','Cancelled'],['refund','Refund'],['history','History Bet']];html+='<div class="filter-bets">'+filters.map(function(f){return'<button class="'+(myBetsFilter===f[0]?'active':'')+'" onclick="setMyBetsFilter(\''+f[0]+'\')">'+f[1]+'</button>';}).join('')+'</div>';if(myBetsFilter==='history'){var histOpts=[['today','Today'],['week','Past Week'],['month','Past Month'],['recent','Recent Bets'],['custom','Custom']];html+='<div class="history-sub">'+histOpts.map(function(h){return'<button class="'+(historyFilter===h[0]?'active':'')+'" onclick="setHistoryFilter(\''+h[0]+'\')">'+h[1]+'</button>';}).join('')+'</div>';if(historyFilter==='custom')html+=buildCustomDateHTML();}var list=bets.slice();if(myBetsFilter==='open')list=list.filter(function(b){return b.status==='open';});else if(myBetsFilter==='won')list=list.filter(function(b){return b.status==='won';});else if(myBetsFilter==='lost')list=list.filter(function(b){return b.status==='lost';});else if(myBetsFilter==='cashout')list=list.filter(function(b){return b.status==='cashout';});else if(myBetsFilter==='cancelled')list=list.filter(function(b){return b.status==='cancelled';});else if(myBetsFilter==='refund')list=list.filter(function(b){return b.status==='refund';});else if(myBetsFilter==='history')list=filterBetsByHistory(list);if(!list.length)html+='<div class="empty-slip"><h3 style="margin-bottom:0">Belum ada taruhan</h3></div>';else list.forEach(function(b){html+=renderMyBetCard(b);});}if(message&&!(copyMessage&&copyMessage.text==='Code Disalin'))html+='<div class="alert-box '+message.type+'">'+message.text+'</div>';return html;}
+  function updateSlip(){var n=selections.length;document.getElementById('mobile-sel-count').textContent=String(n);var badge=document.getElementById('slip-badge');if(badge){badge.setAttribute('data-count',String(n));badge.textContent=n>0?String(n):'';}var sc=document.getElementById('sel-count');if(sc)sc.textContent=String(n);var openN=openBetsCount(),ob=document.getElementById('open-bet-badge');if(ob){ob.setAttribute('data-n',String(openN));ob.textContent=openN>0?String(openN):'';}var body=document.getElementById('slip-sheet-body');if(body)body.innerHTML=buildSlipHTML();var tabSlip=document.getElementById('tab-slip'),tabBets=document.getElementById('tab-bets');if(tabSlip)tabSlip.classList.toggle('active',currentTab==='slip');if(tabBets)tabBets.classList.toggle('active',currentTab==='bets');updateBalanceUI();}
+  function refreshLists(){if(currentView==='home')renderHome();if(currentView==='live')renderLive();if(currentView==='upcoming')renderUpcoming();if(currentView==='football')renderFootball();if(currentView==='prediction')renderPrediction();if(currentView==='favorite')renderFavorite();if(currentView==='match'&&currentMatchId)renderMatchDetail(currentMatchId);if(currentView==='slip')updateSlip();}
+
+  (function bindSlipPullClose(){var startY=0,pulling=false,page=null,body=null,hint=null,THRESHOLD=90;function onStart(e){if(currentView!=='slip')return;if(document.getElementById('bet-detail-overlay').classList.contains('open'))return;page=document.getElementById('slip-page');body=document.getElementById('slip-sheet-body');hint=document.getElementById('slip-pull-hint');if(!page||!body)return;if(body.scrollTop>2)return;var t=e.touches?e.touches[0]:e;startY=t.clientY;pulling=true;page.classList.add('pulling');}function onMove(e){if(!pulling||!page||!body)return;if(body.scrollTop>2){pulling=false;page.style.transform='translateY(0)';page.classList.remove('pulling');if(hint)hint.classList.remove('show');return;}var t=e.touches?e.touches[0]:e,dy=t.clientY-startY;if(dy<0)dy=0;if(dy>0&&e.cancelable)e.preventDefault();page.style.transform='translateY('+Math.min(dy,180)+'px)';if(hint)hint.classList.toggle('show',dy>40);}function onEnd(e){if(!pulling||!page)return;var t=(e.changedTouches&&e.changedTouches[0])||e,dy=(t?t.clientY:startY)-startY;pulling=false;page.classList.remove('pulling');if(hint)hint.classList.remove('show');if(dy>=THRESHOLD&&body&&body.scrollTop<=2){page.style.transform='translateY(0)';closeSlip();}else page.style.transform='translateY(0)';}document.addEventListener('touchstart',onStart,{passive:true});document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onEnd,{passive:true});})();
+  (function bindSearchInput(){var input=document.getElementById('search-overlay-input');if(!input)return;input.addEventListener('input',function(){var v=input.value;document.getElementById('search-clear-btn').classList.toggle('visible',v.length>0);renderSearchBody(v);});input.addEventListener('keydown',function(e){if(e.key==='Enter'){var v=(input.value||'').trim();if(v)pushSearchHistory(v);}});})();
+  (function init(){var theme=localStorage.getItem('hb-theme')||'dark';document.documentElement.setAttribute('data-theme',theme);updateThemeIcon(theme);if(!wallets[selectedCurrency])selectedCurrency='USDT';upcomingDateKey=toDateKey(startOfDay(new Date()));var t=new Date();calViewYear=t.getFullYear();calViewMonth=t.getMonth();ensureMatchDates();updateBalanceUI();showView('home');updateSlip();})();
+  </script>
+</body>
+</html>
